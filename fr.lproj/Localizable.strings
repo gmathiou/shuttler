@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  shuttler
+
+  Created by Georgios Mathioudakis on 10/3/14.
+  Copyright (c) 2014 fr.inria.arles. All rights reserved.
+*/
+
+"nearest_stop" = "NEAREST STOP";
+"stop_subtitle" = "Shuttle bus stop";
+"hop_off" = "HOP-OFF";
+"hop_on" = "HOP-ON";
+"arrived_msg" = "You arrived at Inria";
+"stop_updating_msg" = "I will stop updating the location now";
+"all_right" = "All Right";
+"con_error" = "Connection error";
+"cannot_reach_server" = "We cannot reach the server at this time";
+"on_board" = "ON BOARD";

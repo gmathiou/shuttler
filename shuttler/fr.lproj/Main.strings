@@ -1,0 +1,69 @@
+
+/* Class = "IBUIButton"; normalTitle = "Sign-out from my account"; ObjectID = "0JN-Tt-2Fy"; */
+"0JN-Tt-2Fy.normalTitle" = "Sign-out from my account";
+
+/* Class = "IBUILabel"; text = "km travelled"; ObjectID = "1Gf-60-HIg"; */
+"1Gf-60-HIg.text" = "km travelled";
+
+/* Class = "IBUILabel"; text = "v 0.1"; ObjectID = "4bG-qn-Pm9"; */
+"4bG-qn-Pm9.text" = "v 0.1";
+
+/* Class = "IBUILabel"; text = "09:54"; ObjectID = "6gJ-lF-jQ8"; */
+"6gJ-lF-jQ8.text" = "09:54";
+
+/* Class = "IBUILabel"; text = "#1"; ObjectID = "78b-Ql-TTi"; */
+"78b-Ql-TTi.text" = "#1";
+
+/* Class = "IBUINavigationController"; title = "Splash"; ObjectID = "8OL-OV-r5a"; */
+"8OL-OV-r5a.title" = "Splash";
+
+/* Class = "IBUILabel"; text = "people helped"; ObjectID = "9gJ-LV-jox"; */
+"9gJ-LV-jox.text" = "people helped";
+
+/* Class = "IBUIButton"; normalTitle = "HOP-ON"; ObjectID = "BML-gd-rmZ"; */
+"BML-gd-rmZ.normalTitle" = "HOP-ON";
+
+/* Class = "IBUILabel"; text = "0"; ObjectID = "Bvg-dL-8id"; */
+"Bvg-dL-8id.text" = "0";
+
+/* Class = "IBUILabel"; text = "ranking"; ObjectID = "G9U-9r-aSJ"; */
+"G9U-9r-aSJ.text" = "ranking";
+
+/* Class = "IBUINavigationItem"; title = "Shuttler"; ObjectID = "I7e-1a-cT9"; */
+"I7e-1a-cT9.title" = "Shuttler";
+
+/* Class = "IBUILabel"; text = "0"; ObjectID = "LiQ-iw-nWA"; */
+"LiQ-iw-nWA.text" = "0";
+
+/* Class = "IBUIBarButtonItem"; title = "Back"; ObjectID = "PaE-bV-Bp6"; */
+"PaE-bV-Bp6.title" = "Back";
+
+/* Class = "IBUINavigationController"; title = "Home Navigation Controller"; ObjectID = "QJW-lt-w5H"; */
+"QJW-lt-w5H.title" = "Home Navigation Controller";
+
+/* Class = "IBUIBarButtonItem"; title = "Back"; ObjectID = "Qz1-ZW-Cah"; */
+"Qz1-ZW-Cah.title" = "Back";
+
+/* Class = "IBUINavigationController"; title = "Profile"; ObjectID = "ckV-o2-3aS"; */
+"ckV-o2-3aS.title" = "Profile";
+
+/* Class = "IBUILabel"; text = "bus expected"; ObjectID = "fv7-5M-gC5"; */
+"fv7-5M-gC5.text" = "bus expected";
+
+/* Class = "IBUIViewController"; title = "Profile"; ObjectID = "kbp-hU-ex9"; */
+"kbp-hU-ex9.title" = "Profile";
+
+/* Class = "IBUIViewController"; title = "Splash"; ObjectID = "lPt-la-0E8"; */
+"lPt-la-0E8.title" = "Splash";
+
+/* Class = "IBUILabel"; text = "NEAREST STOP"; ObjectID = "oIr-DD-Rf9"; */
+"oIr-DD-Rf9.text" = "LE PLUS PROCHE";
+
+/* Class = "IBUILabel"; text = "Charles de Gaule - Etoile"; ObjectID = "ugl-mc-5VZ"; */
+"ugl-mc-5VZ.text" = "Charles de Gaule - Etoile";
+
+/* Class = "IBUIViewController"; title = "Home"; ObjectID = "vjx-wP-jrL"; */
+"vjx-wP-jrL.title" = "Acueil";
+
+/* Class = "IBUINavigationItem"; title = "Profile"; ObjectID = "yr4-84-36o"; */
+"yr4-84-36o.title" = "Profil";
