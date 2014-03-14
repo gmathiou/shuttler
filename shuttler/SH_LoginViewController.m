@@ -69,30 +69,12 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
     if ([[GPPSignIn sharedInstance] authentication]) {
         // The user is signed in.
         [self presentHome:self];
-            } else {
-        self.signInButton.hidden = NO;
-        // Perform other actions here
     }
 }
 
 - (IBAction)presentHome:(id)sender
 {
     [self performSegueWithIdentifier:@"loginToHomeSegue" sender:sender];
-    
-    //SH_HomeViewController *home = [[SH_HomeViewController alloc] init];
-    //[self presentViewController:home animated:YES completion:nil];
-
 }
-
-
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"loginToHomeSegue"])
-    {
-        NSLog(@"\n\nPrepare for segue\n\n");
-    }
-}
-
 
 @end

@@ -79,8 +79,6 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
     } else {
         if ([[GPPSignIn sharedInstance] authentication]) {
             [self presentHome:self];
-        } else {
-            [self presentLogin:self];
         }
     }
 }

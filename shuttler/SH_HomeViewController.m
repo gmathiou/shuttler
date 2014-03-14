@@ -52,7 +52,7 @@
     [self requestBusesForLine];
     
     //Frequent update of available buses. Default time set to 10s.
-    _busesRequests = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
+    _busesRequests = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -157,7 +157,7 @@
                           _user.currentLocation.coordinate.latitude,
                           _user.currentLocation.coordinate.longitude,
                           _user.busLine.lineId,
-                          _user.closestBus.lastSeenStop.stopId];
+                          _user.onBoardBus.lastSeenStop.stopId];
         
         NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding];
         NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -217,7 +217,7 @@
  */
 - (void)requestBusesForLine
 {
-    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/busesforline/%@/%d",Server_URL,_user.email, _user.busLine.lineId];
+    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/busesforline/%@/%d",Server_URL,_user.email, _user.closestStop.line.lineId];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
     NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
@@ -290,6 +290,17 @@
         }
         [self findNearestBus];
     }
+    else if([res objectForKey:@"lines"]!=nil)
+    {
+        // Iterate stops
+        for (NSDictionary *result in [res objectForKey:@"lines"]) {
+            NSString *lineId = [result objectForKey:@"id"];
+            NSString *lineName = [result objectForKey:@"name"];
+            
+            SH_BusLine *newLine = [[SH_BusLine alloc] initWithId:[lineId intValue] withName:lineName];
+            [_busLines setObject:newLine forKey:lineId];
+        }
+    }
     else if([res objectForKey:@"stops"]!=nil)
     {
         [_stops removeAllObjects]; //Remove old entries
@@ -301,11 +312,6 @@
             NSString *latitude = [result objectForKey:@"latitude"];
             NSString *longitude = [result objectForKey:@"longitude"];
             NSString *lineId = [result objectForKey:@"lineId"];
-            
-            if([_busLines objectForKey:lineId] == nil) //No such line exists. Something bad happened
-            {
-                [self requestStops];//Wait for the lines response and call again the stops query
-            }
             
             CLLocation *newStopLocation = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
             SH_Stop *newStop = [[SH_Stop alloc] initWithId:[stopId intValue]
@@ -329,27 +335,10 @@
         }
         [self findNearestStop];
     }
-    else if([res objectForKey:@"lines"]!=nil)
-    {
-        // Iterate stops
-        for (NSDictionary *result in [res objectForKey:@"lines"]) {
-            NSString *lineId = [result objectForKey:@"id"];
-            NSString *lineName = [result objectForKey:@"name"];
-            
-            SH_BusLine *newLine = [[SH_BusLine alloc] initWithId:[lineId intValue] withName:lineName];
-            [_busLines setObject:newLine forKey:lineId];
-        }
-    }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    // The request has failed for some reason!
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"con_error", nil)]
-                                                    message:[NSString stringWithFormat:NSLocalizedString(@"cannot_reach_server", nil)]
-                                                   delegate:nil
-                                          cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"all_right", nil)]
-                                          otherButtonTitles:nil];
-    [alert show];
+    NSLog(@"Connection Error");
 }
 
 #pragma - Hop-on-off handlers
@@ -490,6 +479,8 @@
 -(void)findNearestBus
 {
     double distanceFromNearestBus = 0;
+    [_user setClosestBus:nil];
+    
     for (SH_Bus *bus in _buses) {
         if(bus.line.lineId == _user.busLine.lineId && bus.lastSeenStop.stopId <= _user.closestStop.stopId){ //Check only buses passing through my stop and are behind my stop
             double distanceFromUser = [_user.currentLocation distanceFromLocation:bus.currentLocation];
