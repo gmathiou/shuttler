@@ -16,3 +16,7 @@
 "con_error" = "Connection error";
 "cannot_reach_server" = "We cannot reach the server this time";
 "on_board" = "ON BOARD";
+"not_there_yet" = "Not there yet?";
+"not_there_yet_msg" = "It's been a long time, did you forget to hop-off?";
+"yes_hop_off" = "Yes, get me off";
+"no_hop_off" = "No, it's ok";

@@ -15,7 +15,8 @@
 
 @interface SH_HomeViewController ()
 @property NSMutableArray * annotationsToRemove; //Used for clearing the map markers
-@property NSTimer *busesRequests;
+@property NSTimer *busesRequestsTimer;
+@property NSTimer *hopOffTimer;
 @end
 
 @implementation SH_HomeViewController
@@ -52,7 +53,7 @@
     [self requestBusesForLine];
     
     //Frequent update of available buses. Default time set to 10s.
-    _busesRequests = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
+    _busesRequestsTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -368,7 +369,7 @@
     [self._hopOnButton setBackgroundColor:[UIColor colorWithRed:(60/255.0) green:(143/255.0) blue:(173/255.0) alpha:1] ];
     
     //Stop the bus request timer. An on-board user should not see buses. And remove all buses from the map
-    [_busesRequests invalidate];
+    [_busesRequestsTimer invalidate];
     [self.circularMap removeAnnotations:self.annotationsToRemove];
     [self.annotationsToRemove removeAllObjects];
     
@@ -389,6 +390,7 @@
     NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     
     [self updateUI];
+    _hopOffTimer = [NSTimer scheduledTimerWithTimeInterval:2700.0 target:self selector:@selector(checkHopOffTime) userInfo:nil repeats:YES];
 }
 
 /**
@@ -402,7 +404,7 @@
     [self._hopOnButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"hop_on", nil)]  forState:UIControlStateNormal];
     [self._hopOnButton setBackgroundColor:[UIColor colorWithRed:(95/255.0) green:(197/255.0) blue:(229/255.0) alpha:1] ];
     
-    _busesRequests = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
+    _busesRequestsTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
     [self calculateKilometers];
     
     //Construct JSON as string
@@ -421,6 +423,32 @@
     
     [self findNearestStop];
     [self updateUI];
+}
+
+/**
+ * Performs a check to see why the user didn't hop off yet after a default time period e.g. 45 min.
+ */
+-(void)checkHopOffTime
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"not_there_yet", nil)]
+                                                    message:[NSString stringWithFormat:NSLocalizedString(@"not_there_yet_msg", nil)]
+                                                   delegate:self
+                                          cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"no_hop_off", nil)]
+                                          otherButtonTitles:[NSString stringWithFormat:NSLocalizedString(@"yes_hop_off", nil)], nil];
+    [alert show];
+    [_hopOffTimer invalidate];
+}
+
+/**
+ * Handler for UIAlerts
+ */
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger) buttonIndex{
+    
+    if (buttonIndex == 1) {
+        [self hopOff];
+    } else {
+        _hopOffTimer = [NSTimer scheduledTimerWithTimeInterval:900.0 target:self selector:@selector(checkHopOffTime) userInfo:nil repeats:YES];
+    }
 }
 
 /**
@@ -468,7 +496,10 @@
             [_user setClosestStop: stop];
         }
     }
-    [_nearestStopLabel setText:_user.closestStop.stopName];
+    
+    if(_user.onBoard == NO){
+        [_nearestStopLabel setText:_user.closestStop.stopName];
+    }
     [_user setBusLine: _user.closestStop.line]; //User is interested for the line passing from the stop that he is closest to
 }
 

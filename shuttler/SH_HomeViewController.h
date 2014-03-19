@@ -14,7 +14,7 @@
 #import "SH_User.h"
 #import "SH_Constants.h"
 
-@interface SH_HomeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, NSURLConnectionDelegate>
+@interface SH_HomeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, NSURLConnectionDelegate, UIAlertViewDelegate>
 - (IBAction)hopOnPressed:(id)sender;
 
 @property (weak, nonatomic) IBOutlet MKMapView *circularMap;

@@ -73,7 +73,7 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
 //    NSDate *future = [NSDate dateWithTimeIntervalSinceNow: 1 ];
 //    [NSThread sleepUntilDate:future];
     
-    NSLog(@"Received error %@ and auth object %@",error, auth);
+//    NSLog(@"Received error %@ and auth object %@",error, auth);
     if(error){
         [self presentLogin:self];
     } else {
