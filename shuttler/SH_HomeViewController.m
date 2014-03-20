@@ -109,7 +109,11 @@
     location.latitude = 48.873934;
     location.longitude = 2.2949;
     region.span = span;
-    region.center = location;
+    if(_user.currentLocation == nil) {
+        region.center = location;
+    } else {
+        region.center = _user.currentLocation.coordinate;
+    }
     [self.circularMap setRegion:region animated:YES];
 }
 

@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		42011CD218B1009400A8D5F6 /* home-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 42011CD118B1009400A8D5F6 /* home-bg.png */; };
+		42019B0418DA5758006D4E50 /* page1.png in Resources */ = {isa = PBXBuildFile; fileRef = 42019B0018DA5758006D4E50 /* page1.png */; };
+		42019B0518DA5758006D4E50 /* page2.png in Resources */ = {isa = PBXBuildFile; fileRef = 42019B0118DA5758006D4E50 /* page2.png */; };
+		42019B0618DA5758006D4E50 /* page3.png in Resources */ = {isa = PBXBuildFile; fileRef = 42019B0218DA5758006D4E50 /* page3.png */; };
+		42019B0718DA5758006D4E50 /* page4.png in Resources */ = {isa = PBXBuildFile; fileRef = 42019B0318DA5758006D4E50 /* page4.png */; };
+		42019B0C18DA5783006D4E50 /* SH_IntroViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42019B0918DA5783006D4E50 /* SH_IntroViewController.m */; };
+		42019B0D18DA5783006D4E50 /* SH_IntroPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 42019B0B18DA5783006D4E50 /* SH_IntroPageViewController.m */; };
 		4214069A18B24DEC005D4076 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4214069918B24DEC005D4076 /* MapKit.framework */; };
 		4214069D18B27060005D4076 /* SH_ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4214069C18B27060005D4076 /* SH_ProfileViewController.m */; };
 		4214069F18B271DA005D4076 /* rank.png in Resources */ = {isa = PBXBuildFile; fileRef = 4214069E18B271DA005D4076 /* rank.png */; };
@@ -94,6 +100,14 @@
 
 /* Begin PBXFileReference section */
 		42011CD118B1009400A8D5F6 /* home-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "home-bg.png"; path = "Images/home-bg.png"; sourceTree = "<group>"; };
+		42019B0018DA5758006D4E50 /* page1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = page1.png; path = "Images/tutorial images/page1.png"; sourceTree = "<group>"; };
+		42019B0118DA5758006D4E50 /* page2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = page2.png; path = "Images/tutorial images/page2.png"; sourceTree = "<group>"; };
+		42019B0218DA5758006D4E50 /* page3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = page3.png; path = "Images/tutorial images/page3.png"; sourceTree = "<group>"; };
+		42019B0318DA5758006D4E50 /* page4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = page4.png; path = "Images/tutorial images/page4.png"; sourceTree = "<group>"; };
+		42019B0818DA5783006D4E50 /* SH_IntroViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SH_IntroViewController.h; path = shuttler/SH_IntroViewController.h; sourceTree = "<group>"; };
+		42019B0918DA5783006D4E50 /* SH_IntroViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SH_IntroViewController.m; path = shuttler/SH_IntroViewController.m; sourceTree = "<group>"; };
+		42019B0A18DA5783006D4E50 /* SH_IntroPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SH_IntroPageViewController.h; path = shuttler/SH_IntroPageViewController.h; sourceTree = "<group>"; };
+		42019B0B18DA5783006D4E50 /* SH_IntroPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SH_IntroPageViewController.m; path = shuttler/SH_IntroPageViewController.m; sourceTree = "<group>"; };
 		420E532A18D1ECD000C97EA4 /* SH_Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SH_Constants.h; sourceTree = "<group>"; };
 		4214069918B24DEC005D4076 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		4214069B18B27060005D4076 /* SH_ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SH_ProfileViewController.h; path = shuttler/SH_ProfileViewController.h; sourceTree = "<group>"; };
@@ -223,6 +237,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		42019AF718DA570A006D4E50 /* Tutorial images */ = {
+			isa = PBXGroup;
+			children = (
+				42019B0018DA5758006D4E50 /* page1.png */,
+				42019B0118DA5758006D4E50 /* page2.png */,
+				42019B0218DA5758006D4E50 /* page3.png */,
+				42019B0318DA5758006D4E50 /* page4.png */,
+			);
+			name = "Tutorial images";
+			sourceTree = "<group>";
+		};
 		42769E9F18AD176000929870 = {
 			isa = PBXGroup;
 			children = (
@@ -284,8 +309,8 @@
 				42B57DF118AE5F8900C44991 /* Images */,
 				42B57DEA18AE4E9A00C44991 /* GooglePlus.bundle */,
 				42769EBA18AD176000929870 /* SH_AppDelegate.h */,
-				4243E82818CD2AB3000A3202 /* Localizable.strings */,
 				42769EBB18AD176000929870 /* SH_AppDelegate.m */,
+				4243E82818CD2AB3000A3202 /* Localizable.strings */,
 				42769EB318AD176000929870 /* shuttler-Info.plist */,
 				42769EB418AD176000929870 /* InfoPlist.strings */,
 				42769EB718AD176000929870 /* main.m */,
@@ -341,12 +366,16 @@
 			children = (
 				42B57DF418AE5FB400C44991 /* SH_SplashScreenViewController.h */,
 				42769EC018AD176000929870 /* SH_LoginViewController.h */,
+				42019B0818DA5783006D4E50 /* SH_IntroViewController.h */,
+				42019B0A18DA5783006D4E50 /* SH_IntroPageViewController.h */,
 				42B57DE718AE4E8300C44991 /* SH_HomeViewController.h */,
 				4214069B18B27060005D4076 /* SH_ProfileViewController.h */,
 				42B57DF518AE5FB400C44991 /* SH_SplashScreenViewController.m */,
 				42769EC118AD176000929870 /* SH_LoginViewController.m */,
 				42B57DE818AE4E8300C44991 /* SH_HomeViewController.m */,
 				4214069C18B27060005D4076 /* SH_ProfileViewController.m */,
+				42019B0918DA5783006D4E50 /* SH_IntroViewController.m */,
+				42019B0B18DA5783006D4E50 /* SH_IntroPageViewController.m */,
 			);
 			name = "View Controllers";
 			path = ..;
@@ -382,6 +411,7 @@
 		42B57DF118AE5F8900C44991 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				42019AF718DA570A006D4E50 /* Tutorial images */,
 				4261B4DC18C4C5560081C21D /* bus.png */,
 				4261B4DD18C4C5560081C21D /* bus@2x.png */,
 				4286B4CE18BFA241000DF272 /* App Icon [Rounded] */,
@@ -529,15 +559,19 @@
 				4286B4E318BFA241000DF272 /* AppIcon50x50.png in Resources */,
 				42B57DFA18AE794C00C44991 /* logo.png in Resources */,
 				4286B4E018BFA241000DF272 /* AppIcon29x29@2x.png in Resources */,
+				42019B0618DA5758006D4E50 /* page3.png in Resources */,
 				4286B4E418BFA241000DF272 /* AppIcon50x50@2x.png in Resources */,
 				42769EB618AD176000929870 /* InfoPlist.strings in Resources */,
 				42B3DD1E18B2C2CD0091FCE5 /* profile@2x.png in Resources */,
+				42019B0518DA5758006D4E50 /* page2.png in Resources */,
+				42019B0718DA5758006D4E50 /* page4.png in Resources */,
 				42522B4318C7D8E700C94B58 /* uknown.png in Resources */,
 				4249DD8918BEA5A40083C9A5 /* profileIcon.png in Resources */,
 				42769EBF18AD176000929870 /* Main.storyboard in Resources */,
 				4286B4EC18BFA241000DF272 /* AppIcon76x76@2x.png in Resources */,
 				42BFBCB818BCAAA3007C311E /* bus_pin.png in Resources */,
 				4286B4E818BFA241000DF272 /* AppIcon60x60@2x.png in Resources */,
+				42019B0418DA5758006D4E50 /* page1.png in Resources */,
 				42B3DD1D18B2C2CD0091FCE5 /* profile.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -561,6 +595,7 @@
 				42BFBCAC18BC93A7007C311E /* SH_StopAnnotation.m in Sources */,
 				42B57DF618AE5FB400C44991 /* SH_SplashScreenViewController.m in Sources */,
 				42769EB818AD176000929870 /* main.m in Sources */,
+				42019B0D18DA5783006D4E50 /* SH_IntroPageViewController.m in Sources */,
 				4289BD4F18D0A16E005947B6 /* SH_Stop.m in Sources */,
 				42BFBCB518BCA814007C311E /* SH_BusAnnotation.m in Sources */,
 				42769EC218AD176000929870 /* SH_LoginViewController.m in Sources */,
@@ -568,6 +603,7 @@
 				4289BD4C18D09EA0005947B6 /* SH_User.m in Sources */,
 				42769EBC18AD176000929870 /* SH_AppDelegate.m in Sources */,
 				4214069D18B27060005D4076 /* SH_ProfileViewController.m in Sources */,
+				42019B0C18DA5783006D4E50 /* SH_IntroViewController.m in Sources */,
 				4289BD5218D0A184005947B6 /* SH_BusLine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

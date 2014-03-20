@@ -68,13 +68,18 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
     NSLog(@"Received error %@ and auth object %@",error, auth);
     if ([[GPPSignIn sharedInstance] authentication]) {
         // The user is signed in.
-        [self presentHome:self];
+        [self presentTutorial:self];
     }
 }
 
 - (IBAction)presentHome:(id)sender
 {
     [self performSegueWithIdentifier:@"loginToHomeSegue" sender:sender];
+}
+
+- (IBAction)presentTutorial:(id)sender
+{
+    [self performSegueWithIdentifier:@"loginToTutorialSegue" sender:sender];
 }
 
 @end
