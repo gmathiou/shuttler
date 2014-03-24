@@ -22,7 +22,8 @@ void onUncaughtException(NSException *exception)
 {
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-    pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
+    pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
+    pageControl.backgroundColor = [UIColor blackColor];
     
     NSSetUncaughtExceptionHandler(&onUncaughtException);
     return YES;

@@ -20,3 +20,6 @@
 "not_there_yet_msg" = "It's been a long time, did you forget to hop-off?";
 "yes_hop_off" = "Yes, get me off";
 "no_hop_off" = "No, it's ok";
+"intro_1" = "Get the expected arrival time of the shuttle";
+"intro_2" = "Live view of the shuttle's location";
+"intro_3" = "Hop-On to help the community";
