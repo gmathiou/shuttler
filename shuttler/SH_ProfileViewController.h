@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SH_User.h"
+#import "SH_HomeViewController.h"
 
 @interface SH_ProfileViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIButton *signOutButton;
@@ -19,4 +20,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *viewsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *kilometersLabel;
 @property (weak, nonatomic) SH_User *user;
+@property (weak, nonatomic) SH_HomeViewController *homeRef;
 @end

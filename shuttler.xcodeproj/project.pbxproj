@@ -67,6 +67,7 @@
 		4289BD4F18D0A16E005947B6 /* SH_Stop.m in Sources */ = {isa = PBXBuildFile; fileRef = 4289BD4E18D0A16E005947B6 /* SH_Stop.m */; };
 		4289BD5218D0A184005947B6 /* SH_BusLine.m in Sources */ = {isa = PBXBuildFile; fileRef = 4289BD5118D0A184005947B6 /* SH_BusLine.m */; };
 		4289BD5518D0A1AA005947B6 /* SH_Bus.m in Sources */ = {isa = PBXBuildFile; fileRef = 4289BD5418D0A1AA005947B6 /* SH_Bus.m */; };
+		42A7660D18E103B300814D1C /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 42A7660C18E103B300814D1C /* Reachability.m */; };
 		42B3DD1518B2A3580091FCE5 /* hop-on-btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 42B3DD1318B2A3580091FCE5 /* hop-on-btn.png */; };
 		42B3DD1618B2A3580091FCE5 /* hop-on-btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42B3DD1418B2A3580091FCE5 /* hop-on-btn@2x.png */; };
 		42B3DD1918B2A7B60091FCE5 /* hop-on-btn-pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 42B3DD1718B2A7B60091FCE5 /* hop-on-btn-pressed.png */; };
@@ -84,6 +85,7 @@
 		42BFBCB518BCA814007C311E /* SH_BusAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFBCB418BCA814007C311E /* SH_BusAnnotation.m */; };
 		42BFBCB818BCAAA3007C311E /* bus_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BFBCB618BCAAA3007C311E /* bus_pin.png */; };
 		42BFBCB918BCAAA3007C311E /* bus_pin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BFBCB718BCAAA3007C311E /* bus_pin@2x.png */; };
+		42E58EDB18E24BCC00ECF65C /* SH_DataHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E58EDA18E24BCC00ECF65C /* SH_DataHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -175,6 +177,8 @@
 		4289BD5118D0A184005947B6 /* SH_BusLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SH_BusLine.m; sourceTree = "<group>"; };
 		4289BD5318D0A1AA005947B6 /* SH_Bus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SH_Bus.h; sourceTree = "<group>"; };
 		4289BD5418D0A1AA005947B6 /* SH_Bus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SH_Bus.m; sourceTree = "<group>"; };
+		42A7660B18E103B300814D1C /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		42A7660C18E103B300814D1C /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		42B3DD1318B2A3580091FCE5 /* hop-on-btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hop-on-btn.png"; path = "Images/hop-on-btn.png"; sourceTree = "<group>"; };
 		42B3DD1418B2A3580091FCE5 /* hop-on-btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hop-on-btn@2x.png"; path = "Images/hop-on-btn@2x.png"; sourceTree = "<group>"; };
 		42B3DD1718B2A7B60091FCE5 /* hop-on-btn-pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "hop-on-btn-pressed.png"; path = "Images/hop-on-btn-pressed.png"; sourceTree = "<group>"; };
@@ -196,6 +200,8 @@
 		42BFBCB418BCA814007C311E /* SH_BusAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SH_BusAnnotation.m; sourceTree = "<group>"; };
 		42BFBCB618BCAAA3007C311E /* bus_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bus_pin.png; path = Images/bus_pin.png; sourceTree = "<group>"; };
 		42BFBCB718BCAAA3007C311E /* bus_pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bus_pin@2x.png"; path = "Images/bus_pin@2x.png"; sourceTree = "<group>"; };
+		42E58ED918E24BCC00ECF65C /* SH_DataHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SH_DataHandler.h; sourceTree = "<group>"; };
+		42E58EDA18E24BCC00ECF65C /* SH_DataHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SH_DataHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -306,6 +312,8 @@
 				42B57DEA18AE4E9A00C44991 /* GooglePlus.bundle */,
 				42769EBA18AD176000929870 /* SH_AppDelegate.h */,
 				42769EBB18AD176000929870 /* SH_AppDelegate.m */,
+				42A7660B18E103B300814D1C /* Reachability.h */,
+				42A7660C18E103B300814D1C /* Reachability.m */,
 				4243E82818CD2AB3000A3202 /* Localizable.strings */,
 				42769EB318AD176000929870 /* shuttler-Info.plist */,
 				42769EB418AD176000929870 /* InfoPlist.strings */,
@@ -389,6 +397,8 @@
 				4289BD5118D0A184005947B6 /* SH_BusLine.m */,
 				4289BD5318D0A1AA005947B6 /* SH_Bus.h */,
 				4289BD5418D0A1AA005947B6 /* SH_Bus.m */,
+				42E58ED918E24BCC00ECF65C /* SH_DataHandler.h */,
+				42E58EDA18E24BCC00ECF65C /* SH_DataHandler.m */,
 			);
 			name = DataModel;
 			sourceTree = "<group>";
@@ -587,6 +597,7 @@
 				42BFBCAC18BC93A7007C311E /* SH_StopAnnotation.m in Sources */,
 				42B57DF618AE5FB400C44991 /* SH_SplashScreenViewController.m in Sources */,
 				42769EB818AD176000929870 /* main.m in Sources */,
+				42A7660D18E103B300814D1C /* Reachability.m in Sources */,
 				42019B0D18DA5783006D4E50 /* SH_IntroPageViewController.m in Sources */,
 				4289BD4F18D0A16E005947B6 /* SH_Stop.m in Sources */,
 				42BFBCB518BCA814007C311E /* SH_BusAnnotation.m in Sources */,
@@ -595,6 +606,7 @@
 				4289BD4C18D09EA0005947B6 /* SH_User.m in Sources */,
 				42769EBC18AD176000929870 /* SH_AppDelegate.m in Sources */,
 				4214069D18B27060005D4076 /* SH_ProfileViewController.m in Sources */,
+				42E58EDB18E24BCC00ECF65C /* SH_DataHandler.m in Sources */,
 				42019B0C18DA5783006D4E50 /* SH_IntroViewController.m in Sources */,
 				4289BD5218D0A184005947B6 /* SH_BusLine.m in Sources */,
 			);

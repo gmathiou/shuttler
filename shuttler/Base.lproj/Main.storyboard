@@ -43,9 +43,11 @@
                         <outlet property="signInButton" destination="TkE-lc-A4i" id="OgZ-ku-Fx6"/>
                         <segue destination="vjx-wP-jrL" kind="push" identifier="loginToHomeSegue" id="thW-PQ-Wh4"/>
                         <segue destination="Krn-Fh-g28" kind="push" identifier="loginToTutorialSegue" id="vIT-fv-xeC"/>
+                        <segue destination="4Xp-oo-bRu" kind="unwind" identifier="unwindToLoginSegue" unwindAction="goToLogin:" id="qL9-j9-WPL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <exit id="4Xp-oo-bRu" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="1481" y="967"/>
         </scene>
@@ -70,7 +72,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="deviceRGB"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ugl-mc-5VZ">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text=" Waiting for location" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ugl-mc-5VZ">
                                 <rect key="frame" x="11" y="97" width="189" height="23"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.89019607840000003" green="0.2156862745" blue="0.16078431369999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -153,9 +155,11 @@
                         <outlet property="expectedArrivalTimeLabel" destination="6gJ-lF-jQ8" id="XvS-NR-xda"/>
                         <outlet property="nearestStopDescriptionlabel" destination="oIr-DD-Rf9" id="VrA-IK-BRo"/>
                         <outlet property="nearestStopLabel" destination="ugl-mc-5VZ" id="NCf-xc-ym0"/>
+                        <segue destination="kHP-gu-60y" kind="unwind" identifier="goToHomeSegue" unwindAction="goToHome:" id="dPc-XQ-g2z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IaX-cV-jCk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="kHP-gu-60y" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2532" y="392"/>
         </scene>
@@ -276,7 +280,7 @@
                         <outlet property="signOutButton" destination="0JN-Tt-2Fy" id="Hij-Dh-6Q4"/>
                         <outlet property="userProfileImage" destination="YuS-vF-3aT" id="djJ-LG-WCm"/>
                         <outlet property="viewsLabel" destination="Bvg-dL-8id" id="1Y8-cH-oad"/>
-                        <segue destination="vXZ-lx-hvc" kind="push" identifier="profileToLoginSegue" id="aJe-Mx-1KI"/>
+                        <segue destination="vXZ-lx-hvc" kind="push" identifier="profileToLoginSegue" id="ACh-4a-2NA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZlX-OX-g02" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -307,7 +311,7 @@
                                 <rect key="frame" x="46" y="67" width="229" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="v 0.2" textAlignment="center" lineBreakMode="clip" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4bG-qn-Pm9">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="v 1.0" textAlignment="center" lineBreakMode="clip" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4bG-qn-Pm9">
                                 <rect key="frame" x="121" y="491" width="80" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
@@ -513,9 +517,9 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="8PC-sH-HE5"/>
+        <segue reference="thW-PQ-Wh4"/>
+        <segue reference="ACh-4a-2NA"/>
+        <segue reference="yfo-li-wcp"/>
         <segue reference="vIT-fv-xeC"/>
-        <segue reference="hMD-Jk-jhA"/>
-        <segue reference="ykN-bN-Pdf"/>
     </inferredMetricsTieBreakers>
 </document>

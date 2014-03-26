@@ -10,9 +10,11 @@
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import <GooglePlus/GooglePlus.h>
 #import "SH_Constants.h"
+#import "SH_DataHandler.h"
 
 
 @interface SH_ProfileViewController ()
+@property SH_DataHandler *dataHandler;
 @end
 
 @implementation SH_ProfileViewController
@@ -42,6 +44,8 @@
     
     [self getGoogleProfileData];
     [self getDataFromShuttlerServer];
+    
+    _dataHandler = [SH_DataHandler sharedInstance];
 }
 
 -(void)getGoogleProfileData
@@ -98,14 +102,44 @@
 }
 
 - (IBAction)signOutButtonPressed:(id)sender {
+    [_dataHandler.busesRequestsTimer invalidate];
     [self signOut];
-    [self presentLogin:self];
     [_user setImage:nil];
+    [self presentLogin:self];
 }
 
 - (IBAction)presentLogin:(id)sender
 {
-    [self performSegueWithIdentifier:@"profileToLoginSegue" sender:sender];
+    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    SEL theUnwindSelector = @selector(goToLogin:);
+    NSString *unwindSegueIdentifier = @"unwindToLoginSeque";
+    
+    UINavigationController *nc = [self navigationController];
+    // Find the view controller that has this unwindAction selector (may not be one in the nav stack)
+    UIViewController *viewControllerToCallUnwindSelectorOn = [nc viewControllerForUnwindSegueAction: theUnwindSelector
+                                                                                 fromViewController: self
+                                                                                         withSender: sender];
+    // None found, then do nothing.
+    if (viewControllerToCallUnwindSelectorOn == nil) {
+        NSLog(@"No controller found to unwind too");
+        [self performSegueWithIdentifier:@"profileToLoginSegue" sender:sender];
+        return;
+    }
+    
+    // Can the controller that we found perform the unwind segue.  (This is decided by that controllers implementation of canPerformSeque: method
+    BOOL cps = [viewControllerToCallUnwindSelectorOn canPerformUnwindSegueAction: theUnwindSelector
+                                                              fromViewController: self
+                                                                      withSender: sender];
+    // If we have permision to perform the seque on the controller where the unwindAction is implmented
+    // then get the segue object and perform it.
+    if (cps) {
+        
+        UIStoryboardSegue *unwindSegue = [nc segueForUnwindingToViewController: viewControllerToCallUnwindSelectorOn fromViewController: self identifier: unwindSegueIdentifier];
+        
+        [viewControllerToCallUnwindSelectorOn prepareForSegue: unwindSegue sender: self];
+        
+        [unwindSegue perform];
+    }
 }
 
 - (void)signOut {
@@ -138,7 +172,6 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     // The request is complete and data has been received
     // You can parse the stuff in your instance variable now
-    //NSLog(@"Finish loading");
     // convert to JSON
     NSError *myError = nil;
     NSDictionary *res = [NSJSONSerialization JSONObjectWithData:self._responseData options:NSJSONReadingMutableLeaves error:&myError];
@@ -160,7 +193,7 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     // The request has failed for some reason!
     // Check the error var
-    NSLog(@"ERROR");
+    NSLog(@"Connection Error");
 }
 
 @end

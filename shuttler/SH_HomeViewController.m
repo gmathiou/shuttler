@@ -6,17 +6,20 @@
 //  Copyright (c) 2014 fr.inria.arles. All rights reserved.
 //
 
-#import "SH_HomeViewController.h"
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import <GooglePlus/GooglePlus.h>
+#import "SH_HomeViewController.h"
 #import "SH_ProfileViewController.h"
 #import "SH_StopAnnotation.h"
 #import "SH_BusAnnotation.h"
+#import "Reachability.h"
+#import "SH_DataHandler.h"
 
 @interface SH_HomeViewController ()
 @property NSMutableArray * annotationsToRemove; //Used for clearing the map markers
-@property NSTimer *busesRequestsTimer;
 @property NSTimer *hopOffTimer;
+@property GPPSignIn *signIn;
+@property NSMutableData *_responseData;
 @end
 
 @implementation SH_HomeViewController
@@ -33,33 +36,47 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self checkNetworkConnection];
     self.navigationItem.hidesBackButton = YES;
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
-    _user                   = [[SH_User alloc] init];//This is the current user
-    _buses                  = [NSMutableArray array]; //All available buses
-    _busLines               = [NSMutableDictionary dictionary]; //All available bus lines
-    _stops                  = [NSMutableDictionary dictionary]; //All available stops
-    _annotationsToRemove    = [NSMutableArray array]; //Annotation to be removed from map at each loop
+    //Load vars from Data Handler
+    SH_DataHandler *dataHandler = [SH_DataHandler sharedInstance];
+    _user                       = dataHandler.user;
+    _buses                      = dataHandler.buses;
+    _busLines                   = dataHandler.busLines;
+    _stops                      = dataHandler.stops;
+    _annotationsToRemove        = dataHandler.annotationsToRemove;
+    _locationManager            = dataHandler.locationManager;
+    _busesRequestsTimer         = dataHandler.busesRequestsTimer;
     
-    GPPSignIn *signIn = [GPPSignIn sharedInstance];
-    [_user setEmail:signIn.authentication.userEmail];
+    //Get Google Auth
+    _signIn = [GPPSignIn sharedInstance];
+    [_user setEmail:_signIn.authentication.userEmail];
     
-    [self locationTrackingInit];
     [self mapInit];
-    
-    [self requestBusLines];
-    [self requestStops];
-    [self requestBusesForLine];
-    
-    //Frequent update of available buses. Default time set to 10s.
-    _busesRequestsTimer = [NSTimer scheduledTimerWithTimeInterval:20.0 target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
+    [self locationTrackingInit];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+-(void)checkNetworkConnection
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable) {
+        UIAlertView *alert;
+        alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"network_error", nil)]
+                                           message:[NSString stringWithFormat:NSLocalizedString(@"no_internet", nil)]
+                                          delegate:nil
+                                 cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"all_right", nil)]
+                                 otherButtonTitles:nil];
+        [alert show];
+    }
 }
 
 /**
@@ -80,11 +97,9 @@
  */
 -(void)locationTrackingInit
 {
-    self.locationManager = [[CLLocationManager alloc] init];
-    [self.locationManager setDelegate:self];
-    [self.locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
-    [self.locationManager setDistanceFilter:10.0f];
-    [self.locationManager startUpdatingLocation];
+    [_locationManager setDelegate:self];
+    [_locationManager setDesiredAccuracy:kCLLocationAccuracyNearestTenMeters];
+    [_locationManager setDistanceFilter:distanceThresholdLocationManager];
 }
 
 /**
@@ -93,22 +108,24 @@
 -(void)mapInit
 {
     //Stylize map
-    [self.circularMap.layer setMasksToBounds:YES];
-    [self.circularMap.layer setCornerRadius:140.0];
-    [self.circularMap.layer setBorderColor:[[UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:0.25f] CGColor]];
-    [self.circularMap.layer setBorderWidth:10.0];
-    [self.circularMap setZoomEnabled:true];
-    self.circularMap.delegate = self;
+    [_circularMap.layer setMasksToBounds:YES];
+    [_circularMap.layer setCornerRadius:140.0];
+    [_circularMap.layer setBorderColor:[[UIColor colorWithRed:0.0f/255.0f green:0.0f/255.0f blue:0.0f/255.0f alpha:0.25f] CGColor]];
+    [_circularMap.layer setBorderWidth:10.0];
+    [_circularMap setZoomEnabled:true];
+    _circularMap.delegate = self;
     
     //Dummy center to map, and zoom
     MKCoordinateRegion region;
     MKCoordinateSpan span;
-    span.latitudeDelta = 0.020;
-    span.longitudeDelta = 0.020;
     CLLocationCoordinate2D location;
-    location.latitude = 48.873934;
-    location.longitude = 2.2949;
-    region.span = span;
+    
+    span.latitudeDelta  = 0.020;
+    span.longitudeDelta = 0.020;
+    location.latitude   = 48.873934;
+    location.longitude  = 2.2949;
+    region.span         = span;
+    
     if(_user.currentLocation == nil) {
         region.center = location;
     } else {
@@ -124,14 +141,27 @@
 - (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation {
     MKCoordinateRegion region;
     MKCoordinateSpan span;
-    span.latitudeDelta = 0.015;
-    span.longitudeDelta = 0.015;
     CLLocationCoordinate2D location;
-    location.latitude = userLocation.coordinate.latitude;
-    location.longitude = userLocation.coordinate.longitude;
-    region.span = span;
-    region.center = location;
+    
+    span.latitudeDelta  = 0.015;
+    span.longitudeDelta = 0.015;
+    location.latitude   = userLocation.coordinate.latitude;
+    location.longitude  = userLocation.coordinate.longitude;
+    region.span         = span;
+    region.center       = location;
+    CLLocation *currentUserLocation = [[CLLocation alloc] initWithLatitude: userLocation.coordinate.latitude longitude:userLocation.coordinate.longitude];
+    [_user setCurrentLocation: currentUserLocation];
     [self.circularMap setRegion:region animated:YES];
+
+    if((_user.currentLocation != nil || _stops.count == 0 || _busLines.count == 0) && _user.onBoard == NO){
+        [self requestBusLines];
+        [self requestStops];
+        [self requestBusesForLine];
+    }
+    
+    if(_busesRequestsTimer == nil){
+        _busesRequestsTimer = [NSTimer scheduledTimerWithTimeInterval:requestsFrequency target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
+    }
 }
 
 /**
@@ -142,14 +172,16 @@
     
     //Do the update location requests only if user is On board the bus
     if(_user.onBoard == YES){
-        
-        if([_user.currentLocation distanceFromLocation:_inriaStop.location] < busAtStopThreshold && _user.onBoard == YES) { //Show a message when bus arrives at Inria
+        double distanceFromInria = [_user.currentLocation distanceFromLocation:_inriaStop.location];
+        if(distanceFromInria < inriaArrivalRadiusThreshold && _user.onBoard == YES) { //Show a message when bus arrives at Inria
             [self hopOff];
+            
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"arrived_msg", nil)]
                                                             message:[NSString stringWithFormat:NSLocalizedString(@"stop_updating_msg", nil)]
                                                            delegate:nil
                                                   cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"all_right", nil)]
                                                   otherButtonTitles:nil];
+            
             [alert show];
             return;
         }
@@ -157,7 +189,7 @@
         NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/updatelocation/",Server_URL];
         
         //Construct the JSON here. Like string for now
-        NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"lat\":\"%f\",\"lon\":\"%f\",\"line\":\"%d\",\"lastSeenStopID\":\"%d\"}",
+        NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"latitude\":\"%f\",\"longitude\":\"%f\",\"line\":\"%d\",\"lastseenstopid\":\"%d\"}",
                           _user.email,
                           _user.currentLocation.coordinate.latitude,
                           _user.currentLocation.coordinate.longitude,
@@ -172,10 +204,9 @@
         [request setHTTPBody:postData];
         [request setTimeoutInterval:requestsTimeOut];
         NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        
+        [self updateBusLastSeenStop];
     }
-    [self findNearestStop];
-    [self findNearestBus];
-    [self updateBusLastSeenStop];
 }
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -222,9 +253,9 @@
  */
 - (void)requestBusesForLine
 {
-    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/busesforline/%@/%d",Server_URL,_user.email, _user.closestStop.line.lineId];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    NSString *URL           = [NSString stringWithFormat:@"%@Shuttler-server/webapi/busesforline/%@/%d",Server_URL,_user.email, _user.closestStop.line.lineId];
+    NSURLRequest *request   = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
+    NSURLConnection *conn   = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 /**
@@ -232,9 +263,9 @@
  */
 - (void)requestStops
 {
-    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/stops",Server_URL];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    NSString *URL           = [NSString stringWithFormat:@"%@Shuttler-server/webapi/stops",Server_URL];
+    NSURLRequest *request   = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
+    NSURLConnection *conn   = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 /**
@@ -242,9 +273,9 @@
  */
 - (void)requestBusLines
 {
-    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/lines",Server_URL];
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    NSString *URL           = [NSString stringWithFormat:@"%@Shuttler-server/webapi/lines",Server_URL];
+    NSURLRequest *request   = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
+    NSURLConnection *conn   = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -260,21 +291,34 @@
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    NSError *myError = nil;
-    NSDictionary *res = [NSJSONSerialization JSONObjectWithData:self._responseData options:NSJSONReadingMutableLeaves error:&myError]; // convert to JSON
+    
+    NSError *myError    = nil;
+    NSDictionary *res   = [NSJSONSerialization JSONObjectWithData:self._responseData options:NSJSONReadingMutableLeaves error:&myError]; // convert to JSON
+    
+    if(_user.currentLocation == nil || res == nil){
+        [self requestBusLines];
+        [self requestStops];
+        [self requestBusesForLine];
+        return;
+    }
 
     [_circularMap removeAnnotations:_annotationsToRemove];//Remove old markers
     [_annotationsToRemove removeAllObjects];
 
     if ([res objectForKey:@"buses"]!=nil) {
+        
+        if(_user.onBoard == YES){
+            return;
+        }
+        
         [_buses removeAllObjects]; //Remove old entries
         
         // Iterate buses
         for (NSDictionary *result in [res objectForKey:@"buses"]) {
-            NSString *latitude = [result objectForKey:@"latitude"];
-            NSString *longitude = [result objectForKey:@"longitude"];
-            NSString *lineId = [result objectForKey:@"lineid"];
-            NSString *lastSeenStopId = [result objectForKey:@"lastSeenStopID"];
+            NSString *latitude          = [result objectForKey:@"latitude"];
+            NSString *longitude         = [result objectForKey:@"longitude"];
+            NSString *lineId            = [result objectForKey:@"lineid"];
+            NSString *lastSeenStopId    = [result objectForKey:@"lastseenstopid"];
             
             CLLocation *newBusLocation = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
             if([_busLines objectForKey:lineId] == nil) //No such line exists. Something bad happened
@@ -284,12 +328,12 @@
             [_buses addObject:newBus];
             
             CLLocationCoordinate2D annotationCoord;
-            annotationCoord.latitude = [latitude doubleValue];
-            annotationCoord.longitude = [longitude doubleValue];
+            annotationCoord.latitude    = [latitude doubleValue];
+            annotationCoord.longitude   = [longitude doubleValue];
             
-            SH_BusAnnotation *annotationPoint = [[SH_BusAnnotation alloc] init];
-            annotationPoint.coordinate = annotationCoord;
-            annotationPoint.title = ((SH_BusLine *) [_busLines objectForKey:lineId]).name;
+            SH_BusAnnotation *annotationPoint   = [[SH_BusAnnotation alloc] init];
+            annotationPoint.coordinate          = annotationCoord;
+            annotationPoint.title               = ((SH_BusLine *) [_busLines objectForKey:lineId]).name;
             [self.circularMap addAnnotation:annotationPoint];
             [self.annotationsToRemove addObject:annotationPoint];
         }
@@ -299,51 +343,57 @@
     {
         // Iterate stops
         for (NSDictionary *result in [res objectForKey:@"lines"]) {
-            NSString *lineId = [result objectForKey:@"id"];
-            NSString *lineName = [result objectForKey:@"name"];
-            
+            NSString *lineId    = [result objectForKey:@"id"];
+            NSString *lineName  = [result objectForKey:@"name"];
             SH_BusLine *newLine = [[SH_BusLine alloc] initWithId:[lineId intValue] withName:lineName];
             [_busLines setObject:newLine forKey:lineId];
         }
     }
-    else if([res objectForKey:@"stops"]!=nil)
-    {
+    else if([res objectForKey:@"stops"]!=nil) {
+        if(_busLines.count == 0){ //I should have the lines before getting the stops
+            [self requestStops];
+            return;
+        }
+            
         [_stops removeAllObjects]; //Remove old entries
         
         // Iterate stops
         for (NSDictionary *result in [res objectForKey:@"stops"]) {
-            NSString *stopId = [result objectForKey:@"id"];
-            NSString *name = [result objectForKey:@"name"];
-            NSString *latitude = [result objectForKey:@"latitude"];
+            NSString *stopId    = [result objectForKey:@"id"];
+            NSString *name      = [result objectForKey:@"name"];
+            NSString *latitude  = [result objectForKey:@"latitude"];
             NSString *longitude = [result objectForKey:@"longitude"];
-            NSString *lineId = [result objectForKey:@"lineId"];
+            NSString *lineId    = [result objectForKey:@"lineid"];
             
             CLLocation *newStopLocation = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[longitude doubleValue]];
             SH_Stop *newStop = [[SH_Stop alloc] initWithId:[stopId intValue]
-                                                withName:name
-                                                withLocation:newStopLocation
-                                                inLine:[_busLines objectForKey:lineId]];
+                                                  withName:name
+                                              withLocation:newStopLocation
+                                                    inLine:[_busLines objectForKey:lineId]];
+            
             [_stops setObject:newStop forKey: stopId];
         
             CLLocationCoordinate2D annotationCoord;
-            annotationCoord.latitude = [latitude doubleValue];
-            annotationCoord.longitude = [longitude doubleValue];
+            annotationCoord.latitude    = [latitude doubleValue];
+            annotationCoord.longitude   = [longitude doubleValue];
 
-            SH_StopAnnotation *annotationPoint = [[SH_StopAnnotation alloc] init];
-            annotationPoint.coordinate = annotationCoord;
-            annotationPoint.title = newStop.stopName;
-            annotationPoint.subtitle = [NSString stringWithFormat:NSLocalizedString(@"stop_subtitle", nil)];
+            SH_StopAnnotation *annotationPoint  = [[SH_StopAnnotation alloc] init];
+            annotationPoint.coordinate          = annotationCoord;
+            annotationPoint.title               = newStop.stopName;
+            annotationPoint.subtitle            = [NSString stringWithFormat:NSLocalizedString(@"stop_subtitle", nil)];
+            
             [self.circularMap addAnnotation:annotationPoint];
             
-            if([newStop.stopName isEqual: @"Inria"])
+            if([newStop.stopName isEqual: @"Inria"]){
                 _inriaStop = newStop;
+            }
         }
         [self findNearestStop];
     }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    NSLog(@"Connection Error");
+
 }
 
 #pragma - Hop-on-off handlers
@@ -351,6 +401,11 @@
  * Hop on pressed handlers
  */
 - (IBAction)hopOnPressed:(id)sender {
+    
+    if(_user.currentLocation == nil){ //If there is no current location, do nothing
+        return;
+    }
+    [self checkNetworkConnection];
     if(_user.onBoard == NO){
         [self hopOn];
     } else {
@@ -364,6 +419,7 @@
 -(void)hopOn
 {
     [_user setOnBoard: YES];
+    [self.locationManager startUpdatingLocation];
     [_user setOnBoardBus:[[SH_Bus alloc] initWithLocation:_user.currentLocation withLine:_user.busLine withLastSeenStop:_user.closestStop]];
     [_user setHopedOnLocation: _user.currentLocation]; //Keep the initial location to calculate total km on Hop-off
     NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/hopon/",Server_URL]; //Update the server
@@ -378,7 +434,7 @@
     [self.annotationsToRemove removeAllObjects];
     
     //Construct JSON as string and send the request to server
-    NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"lat\":\"%f\",\"lon\":\"%f\",\"line\":\"%d\"}",
+    NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"latitude\":\"%f\",\"longitude\":\"%f\",\"lineid\":\"%d\"}",
                       _user.email,
                       _user.currentLocation.coordinate.latitude,
                       _user.currentLocation.coordinate.longitude,
@@ -403,26 +459,27 @@
 -(void)hopOff
 {
     [_user setOnBoard: NO];
+    [self.locationManager stopUpdatingLocation];
     [_user setOnBoardBus:nil];
     NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/hopoff/",Server_URL];
     [self._hopOnButton setTitle:[NSString stringWithFormat:NSLocalizedString(@"hop_on", nil)]  forState:UIControlStateNormal];
     [self._hopOnButton setBackgroundColor:[UIColor colorWithRed:(95/255.0) green:(197/255.0) blue:(229/255.0) alpha:1] ];
     
-    _busesRequestsTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
+    _busesRequestsTimer = [NSTimer scheduledTimerWithTimeInterval:requestsFrequency target:self selector:@selector(requestBusesForLine) userInfo:nil repeats:YES];
     [self calculateKilometers];
     
     //Construct JSON as string
-    NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"kilometers\":\"%f\"}",
-                      _user.email,
-                      _user.distanceTravelled];
-    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *post      = [NSString stringWithFormat: @"{\"email\":\"%@\",\"kilometers\":\"%f\"}",
+                           _user.email,
+                           _user.distanceTravelled];
+    NSData *postData    = [post dataUsingEncoding:NSUTF8StringEncoding];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:requestURL]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPBody:postData];
-    [request setTimeoutInterval:20];
+    [request setTimeoutInterval:requestsTimeOut];
     NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     
     [self findNearestStop];
@@ -434,11 +491,11 @@
  */
 -(void)checkHopOffTime
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"not_there_yet", nil)]
-                                                    message:[NSString stringWithFormat:NSLocalizedString(@"not_there_yet_msg", nil)]
-                                                   delegate:self
-                                          cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"no_hop_off", nil)]
-                                          otherButtonTitles:[NSString stringWithFormat:NSLocalizedString(@"yes_hop_off", nil)], nil];
+    UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"not_there_yet", nil)]
+                                                     message:[NSString stringWithFormat:NSLocalizedString(@"not_there_yet_msg", nil)]
+                                                    delegate:self
+                                           cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"no_hop_off", nil)]
+                                           otherButtonTitles:[NSString stringWithFormat:NSLocalizedString(@"yes_hop_off", nil)], nil];
     [alert show];
     [_hopOffTimer invalidate];
 }
@@ -468,7 +525,7 @@
             _busIcon.alpha = 1.0f;
         }];
         [_nearestStopDescriptionlabel setText:[NSString stringWithFormat:NSLocalizedString(@"on_board",nil)]];
-        [_nearestStopLabel setText: [NSString stringWithFormat:@"%@", _user.closestStop.line.name]];
+        [_nearestStopLabel setText: [NSString stringWithFormat:@" %@", _user.closestStop.line.name]];
     } else {
         [UIView animateWithDuration:0.2f animations:^{
             _busIcon.alpha = 0.0f;
@@ -485,14 +542,17 @@
  */
 -(void)findNearestStop
 {
+    if(_user.currentLocation == nil)
+        return;
+    
     double distanceFromNearestStop = 0;
     
     // Iterate stops
     for (id key in _stops) {
         CLLocationCoordinate2D annotationCoord;
         SH_Stop *stop = [_stops objectForKey:key];
-        annotationCoord.latitude = stop.location.coordinate.latitude;
-        annotationCoord.longitude = stop.location.coordinate.longitude;
+        annotationCoord.latitude    = stop.location.coordinate.latitude;
+        annotationCoord.longitude   = stop.location.coordinate.longitude;
         
         double distanceFromUser = [_user.currentLocation distanceFromLocation:stop.location];
         if(distanceFromNearestStop == 0 || distanceFromUser < distanceFromNearestStop){
@@ -502,7 +562,7 @@
     }
     
     if(_user.onBoard == NO){
-        [_nearestStopLabel setText:_user.closestStop.stopName];
+        [_nearestStopLabel setText:[NSString stringWithFormat:@" %@",_user.closestStop.stopName]];
     }
     [_user setBusLine: _user.closestStop.line]; //User is interested for the line passing from the stop that he is closest to
 }
@@ -515,6 +575,11 @@
 {
     double distanceFromNearestBus = 0;
     [_user setClosestBus:nil];
+    
+    if([_buses count] == 0){
+        [_expectedArrivalTimeLabel setText:@"--:--"];
+        return;
+    }
     
     for (SH_Bus *bus in _buses) {
         if(bus.line.lineId == _user.busLine.lineId && bus.lastSeenStop.stopId <= _user.closestStop.stopId){ //Check only buses passing through my stop and are behind my stop
@@ -538,16 +603,20 @@
         [_expectedArrivalTimeLabel setText:@"--:--"];
         return;
     }
-    CLLocationCoordinate2D sourceCoordinate = CLLocationCoordinate2DMake(_user.closestBus.currentLocation.coordinate.latitude,_user.closestBus.currentLocation.coordinate.longitude);
-    MKPlacemark *_srcMark = [[MKPlacemark alloc] initWithCoordinate:sourceCoordinate addressDictionary:nil];
-    MKMapItem *source = [[MKMapItem alloc] initWithPlacemark:_srcMark];
-    MKMapItem *destination = [MKMapItem mapItemForCurrentLocation];
-    MKDirectionsRequest *request = [[MKDirectionsRequest alloc] init];
-    request.source = source;
-    request.transportType = MKDirectionsTransportTypeAutomobile;
-    request.destination = destination;
-    MKDirections *directions = [[MKDirections alloc] initWithRequest:request];
-    __block typeof(self) weakSelf = self;
+    CLLocationCoordinate2D sourceCoordinate         = CLLocationCoordinate2DMake(_user.closestBus.currentLocation.coordinate.latitude,_user.closestBus.currentLocation.coordinate.longitude);
+    CLLocationCoordinate2D destinationCoordinate    = CLLocationCoordinate2DMake(_user.closestStop.location.coordinate.latitude,_user.closestStop.location.coordinate.longitude);
+    
+    MKPlacemark *_srcMark           = [[MKPlacemark alloc] initWithCoordinate:sourceCoordinate addressDictionary:nil];
+    MKPlacemark *_dstnMark          = [[MKPlacemark alloc] initWithCoordinate:destinationCoordinate addressDictionary:nil];
+    MKMapItem *source               = [[MKMapItem alloc] initWithPlacemark:_srcMark];
+    MKMapItem *destination          = [[MKMapItem alloc] initWithPlacemark:_dstnMark];
+    MKDirectionsRequest *request    = [[MKDirectionsRequest alloc] init];
+    request.source                  = source;
+    request.transportType           = MKDirectionsTransportTypeAutomobile;
+    request.destination             = destination;
+    MKDirections *directions        = [[MKDirections alloc] initWithRequest:request];
+    __block typeof(self) weakSelf   = self;
+    
     [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
         if (error) {
             [_expectedArrivalTimeLabel setText:@"--:--"];
@@ -555,11 +624,11 @@
             return;
         }
         
-        MKRoute *currentRoute = [response.routes firstObject];
-        NSDate *now = [NSDate date];
-        NSDate *dateETA = [now dateByAddingTimeInterval:currentRoute.expectedTravelTime];
-        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-        dateFormatter.dateFormat = @"HH:mm";
+        MKRoute *currentRoute           = [response.routes firstObject];
+        NSDate *now                     = [NSDate date];
+        NSDate *dateETA                 = [now dateByAddingTimeInterval:currentRoute.expectedTravelTime];
+        NSDateFormatter *dateFormatter  = [[NSDateFormatter alloc] init];
+        dateFormatter.dateFormat        = @"HH:mm";
         [dateFormatter setTimeZone:[NSTimeZone systemTimeZone]];
         [_expectedArrivalTimeLabel setText:[NSString stringWithFormat:@"%@",[dateFormatter stringFromDate:dateETA]]];
     }];
@@ -575,15 +644,16 @@
         return distance;
     
     CLLocationCoordinate2D sourceCoordinate = CLLocationCoordinate2DMake(_user.hopedOnLocation.coordinate.latitude,_user.hopedOnLocation.coordinate.longitude);
-    MKPlacemark *_srcMark = [[MKPlacemark alloc] initWithCoordinate:sourceCoordinate addressDictionary:nil];
-    MKMapItem *source = [[MKMapItem alloc] initWithPlacemark:_srcMark];
-    MKMapItem *destination = [MKMapItem mapItemForCurrentLocation];
-    MKDirectionsRequest *request = [[MKDirectionsRequest alloc] init];
-    request.source = source;
-    request.transportType = MKDirectionsTransportTypeAutomobile;
-    request.destination = destination;
-    MKDirections *directions = [[MKDirections alloc] initWithRequest:request];
-    __block typeof(self) weakSelf = self;
+    MKPlacemark *_srcMark           = [[MKPlacemark alloc] initWithCoordinate:sourceCoordinate addressDictionary:nil];
+    MKMapItem *source               = [[MKMapItem alloc] initWithPlacemark:_srcMark];
+    MKMapItem *destination          = [MKMapItem mapItemForCurrentLocation];
+    MKDirectionsRequest *request    = [[MKDirectionsRequest alloc] init];
+    request.source                  = source;
+    request.transportType           = MKDirectionsTransportTypeAutomobile;
+    request.destination             = destination;
+    MKDirections *directions        = [[MKDirections alloc] initWithRequest:request];
+    __block typeof(self) weakSelf   = self;
+    
     [directions calculateDirectionsWithCompletionHandler:^(MKDirectionsResponse *response, NSError *error) {
         if (error) {
             NSLog(@"There was an error getting your directions");
@@ -614,14 +684,20 @@
     }
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     // Make sure your segue name in storyboard is the same as this line
     if ([[segue identifier] isEqualToString:@"homeToProfileSegue"])
     {
         SH_ProfileViewController *profile = [segue destinationViewController];
         [profile setUser:_user];
+        [profile setHomeRef:self];
+        [_busesRequestsTimer invalidate];
     }
 }
 
+- (IBAction) goToHome: (UIStoryboardSegue*) segue
+{
+    NSLog(@"goToHome");
+}
 @end

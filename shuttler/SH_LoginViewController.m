@@ -51,6 +51,17 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
     self.signInButton.colorScheme = 1;
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    if ([[GPPSignIn sharedInstance] authentication]) {
+        // The user is signed in.
+        _signInButton.hidden = YES;
+        [self presentHome:self];
+    } else {
+        _signInButton.hidden = NO;
+    }
+}
+
 -(BOOL)prefersStatusBarHidden
 {
     return YES;
@@ -65,10 +76,20 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
 - (void)finishedWithAuth: (GTMOAuth2Authentication *)auth
                    error: (NSError *) error
 {
-    NSLog(@"Received error %@ and auth object %@",error, auth);
-    if ([[GPPSignIn sharedInstance] authentication]) {
-        // The user is signed in.
-        [self presentTutorial:self];
+    if (error) {
+        UIAlertView *alert;
+        alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"network_error", nil)]
+                                           message:[NSString stringWithFormat:NSLocalizedString(@"no_internet", nil)]
+                                          delegate:nil
+                                 cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"all_right", nil)]
+                                 otherButtonTitles:nil];
+        [alert show];
+    } else {
+        if ([[GPPSignIn sharedInstance] authentication]) {
+            // The user is signed in.
+            _signInButton.hidden = YES;
+            [self presentHome:self];
+        }
     }
 }
 
@@ -80,6 +101,10 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
 - (IBAction)presentTutorial:(id)sender
 {
     [self performSegueWithIdentifier:@"loginToTutorialSegue" sender:sender];
+}
+
+- (IBAction)goToLogin: (UIStoryboardSegue*) segue
+{
 }
 
 @end

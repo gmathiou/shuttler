@@ -15,12 +15,12 @@
 #import "SH_Constants.h"
 
 @interface SH_HomeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, NSURLConnectionDelegate, UIAlertViewDelegate>
+
 - (IBAction)hopOnPressed:(id)sender;
+-(void)startRequestTimer;
 
 @property (weak, nonatomic) IBOutlet MKMapView *circularMap;
-@property CLLocationManager *locationManager;
-@property NSMutableData *_responseData;
-
+@property (weak, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIButton *_hopOnButton;
 @property (weak, nonatomic) IBOutlet UILabel *nearestStopLabel;
 @property (weak, nonatomic) IBOutlet UILabel *expectedArrivalTimeLabel;
@@ -28,11 +28,11 @@
 @property (weak, nonatomic) IBOutlet UIImageView *busExptectedContainer;
 @property (weak, nonatomic) IBOutlet UILabel *nearestStopDescriptionlabel;
 @property (weak, nonatomic) IBOutlet UIImageView *busIcon;
-
-@property (strong, nonatomic) SH_User *user;
-@property (strong, nonatomic) NSMutableDictionary *stops;
-@property (strong, nonatomic) NSMutableArray *buses;
-@property (strong, nonatomic) NSMutableDictionary *busLines;
-@property (strong,nonatomic) SH_Stop *inriaStop;
+@property (weak, nonatomic) SH_User *user;
+@property (weak, nonatomic) NSMutableDictionary *stops;
+@property (weak, nonatomic) NSMutableArray *buses;
+@property (weak, nonatomic) NSMutableDictionary *busLines;
+@property (weak, nonatomic) SH_Stop *inriaStop;
+@property (weak, nonatomic) NSTimer *busesRequestsTimer;
 
 @end
