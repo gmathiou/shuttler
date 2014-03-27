@@ -176,13 +176,13 @@
         if(distanceFromInria < inriaArrivalRadiusThreshold && _user.onBoard == YES) { //Show a message when bus arrives at Inria
             [self hopOff];
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"arrived_msg", nil)]
-                                                            message:[NSString stringWithFormat:NSLocalizedString(@"stop_updating_msg", nil)]
-                                                           delegate:nil
-                                                  cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"all_right", nil)]
-                                                  otherButtonTitles:nil];
-            
-            [alert show];
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"arrived_msg", nil)]
+//                                                            message:[NSString stringWithFormat:NSLocalizedString(@"stop_updating_msg", nil)]
+//                                                           delegate:nil
+//                                                  cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"all_right", nil)]
+//                                                  otherButtonTitles:nil];
+//            
+//            [alert show];
             return;
         }
         
@@ -203,8 +203,7 @@
         [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
         [request setHTTPBody:postData];
         [request setTimeoutInterval:requestsTimeOut];
-        NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        
+        [NSURLConnection connectionWithRequest:request delegate:self];
         [self updateBusLastSeenStop];
     }
 }
@@ -255,7 +254,7 @@
 {
     NSString *URL           = [NSString stringWithFormat:@"%@Shuttler-server/webapi/busesforline/%@/%d",Server_URL,_user.email, _user.closestStop.line.lineId];
     NSURLRequest *request   = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
-    NSURLConnection *conn   = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [NSURLConnection connectionWithRequest:request delegate:self];
 }
 
 /**
@@ -265,7 +264,7 @@
 {
     NSString *URL           = [NSString stringWithFormat:@"%@Shuttler-server/webapi/stops",Server_URL];
     NSURLRequest *request   = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
-    NSURLConnection *conn   = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [NSURLConnection connectionWithRequest:request delegate:self];
 }
 
 /**
@@ -275,7 +274,7 @@
 {
     NSString *URL           = [NSString stringWithFormat:@"%@Shuttler-server/webapi/lines",Server_URL];
     NSURLRequest *request   = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
-    NSURLConnection *conn   = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [NSURLConnection connectionWithRequest:request delegate:self];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
@@ -447,10 +446,13 @@
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPBody:postData];
     [request setTimeoutInterval:requestsTimeOut];
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [NSURLConnection connectionWithRequest:request delegate:self];
     
     [self updateUI];
-    _hopOffTimer = [NSTimer scheduledTimerWithTimeInterval:2700.0 target:self selector:@selector(checkHopOffTime) userInfo:nil repeats:YES];
+    
+    if(![_hopOffTimer isValid]) {
+        _hopOffTimer = [NSTimer scheduledTimerWithTimeInterval:2700.0 target:self selector:@selector(checkHopOffTime) userInfo:nil repeats:YES];
+    }
 }
 
 /**
@@ -480,10 +482,14 @@
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setHTTPBody:postData];
     [request setTimeoutInterval:requestsTimeOut];
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [NSURLConnection connectionWithRequest:request delegate:self];
     
     [self findNearestStop];
     [self updateUI];
+    
+    if([_hopOffTimer isValid]) {
+        [_hopOffTimer invalidate];
+    }
 }
 
 /**
@@ -491,25 +497,10 @@
  */
 -(void)checkHopOffTime
 {
-    UIAlertView *alert  = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"not_there_yet", nil)]
-                                                     message:[NSString stringWithFormat:NSLocalizedString(@"not_there_yet_msg", nil)]
-                                                    delegate:self
-                                           cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"no_hop_off", nil)]
-                                           otherButtonTitles:[NSString stringWithFormat:NSLocalizedString(@"yes_hop_off", nil)], nil];
-    [alert show];
-    [_hopOffTimer invalidate];
-}
-
-/**
- * Handler for UIAlerts
- */
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger) buttonIndex{
-    
-    if (buttonIndex == 1) {
+    if(_user.onBoard == YES) {
         [self hopOff];
-    } else {
-        _hopOffTimer = [NSTimer scheduledTimerWithTimeInterval:900.0 target:self selector:@selector(checkHopOffTime) userInfo:nil repeats:YES];
     }
+    [_hopOffTimer invalidate];
 }
 
 /**
@@ -582,7 +573,7 @@
     }
     
     for (SH_Bus *bus in _buses) {
-        if(bus.line.lineId == _user.busLine.lineId && bus.lastSeenStop.stopId <= _user.closestStop.stopId){ //Check only buses passing through my stop and are behind my stop
+        if(bus.line.lineId == _user.busLine.lineId && (bus.lastSeenStop.stopId < _user.closestStop.stopId || [[bus currentLocation] distanceFromLocation:_user.closestStop.location] < busAtStopThreshold)){ //Check only buses passing through my stop and are behind my stop
             double distanceFromUser = [_user.currentLocation distanceFromLocation:bus.currentLocation];
             if(distanceFromNearestBus == 0 || distanceFromUser < distanceFromNearestBus){
                 distanceFromNearestBus = distanceFromUser;

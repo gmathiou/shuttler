@@ -17,8 +17,6 @@
 @interface SH_HomeViewController : UIViewController <CLLocationManagerDelegate, MKMapViewDelegate, NSURLConnectionDelegate, UIAlertViewDelegate>
 
 - (IBAction)hopOnPressed:(id)sender;
--(void)startRequestTimer;
-
 @property (weak, nonatomic) IBOutlet MKMapView *circularMap;
 @property (weak, nonatomic) CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIButton *_hopOnButton;

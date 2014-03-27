@@ -92,7 +92,7 @@
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
     
     // Create url connection and fire request
-    NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+    [NSURLConnection connectionWithRequest:request delegate:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -111,7 +111,7 @@
 - (IBAction)presentLogin:(id)sender
 {
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-    SEL theUnwindSelector = @selector(goToLogin:);
+    SEL theUnwindSelector = NSSelectorFromString(@"goToLogin:");
     NSString *unwindSegueIdentifier = @"unwindToLoginSeque";
     
     UINavigationController *nc = [self navigationController];

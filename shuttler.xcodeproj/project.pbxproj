@@ -750,7 +750,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Volumes/Data/[Projects]/[INRIA]/Shuttler2/code/shuttler",
-					"/Users/mathioud/Downloads/google-plus-ios-sdk-1.5.0",
 					"/Volumes/Data/[Projects]/[INRIA]/Shuttler2/code/shuttler/shuttler/Google",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -771,7 +770,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Volumes/Data/[Projects]/[INRIA]/Shuttler2/code/shuttler",
-					"/Users/mathioud/Downloads/google-plus-ios-sdk-1.5.0",
 					"/Volumes/Data/[Projects]/[INRIA]/Shuttler2/code/shuttler/shuttler/Google",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;

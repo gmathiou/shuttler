@@ -14,5 +14,5 @@
 #define inriaArrivalRadiusThreshold 200 //1km radius
 #define requestsTimeOut 50 //Seconds for request timeout
 #define requestsFrequency 20.0 //Seconds for a request update
-#define distanceThresholdLocationManager 20.0f //Seconds for a request update
+#define distanceThresholdLocationManager 20.0f //Meters
 @end
