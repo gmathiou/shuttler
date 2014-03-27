@@ -577,10 +577,16 @@
             double distanceFromUser = [_user.currentLocation distanceFromLocation:bus.currentLocation];
             if(distanceFromNearestBus == 0 || distanceFromUser < distanceFromNearestBus){
                 distanceFromNearestBus = distanceFromUser;
-                _user.closestBus = bus;
+                [_user setClosestBus:bus];
             }
         }
     }
+    
+    if(_user.closestBus == nil){
+        [_expectedArrivalTimeLabel setText:@"--:--"];
+        return;
+    }
+    
     [self findDirectionsFrom];
 }
 
