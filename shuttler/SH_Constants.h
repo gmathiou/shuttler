@@ -9,10 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface SH_Constants : NSObject
-#define Server_URL @"http://arles.rocq.inria.fr:8080/"
-#define busAtStopThreshold 200 //100 meters radius
-#define inriaArrivalRadiusThreshold 200 //1km radius
+#define Server_URL @"http://localhost:8080/"
+#define busAtStopThreshold 100 //100 meters radius
 #define requestsTimeOut 50 //Seconds for request timeout
-#define requestsFrequency 20.0 //Seconds for a request update
+#define requestsFrequency 10.0 //Seconds for a request update
 #define distanceThresholdLocationManager 20.0f //Meters
 @end

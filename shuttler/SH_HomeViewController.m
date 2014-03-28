@@ -173,7 +173,7 @@
     //Do the update location requests only if user is On board the bus
     if(_user.onBoard == YES){
         double distanceFromInria = [_user.currentLocation distanceFromLocation:_inriaStop.location];
-        if(distanceFromInria < inriaArrivalRadiusThreshold && _user.onBoard == YES) { //Show a message when bus arrives at Inria
+        if(distanceFromInria < busAtStopThreshold && _user.onBoard == YES) { //Show a message when bus arrives at Inria
             [self hopOff];
             
 //            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"arrived_msg", nil)]
@@ -573,7 +573,8 @@
     }
     
     for (SH_Bus *bus in _buses) {
-        if(bus.line.lineId == _user.busLine.lineId && (bus.lastSeenStop.stopId < _user.closestStop.stopId || [[bus currentLocation] distanceFromLocation:_user.closestStop.location] < busAtStopThreshold)){ //Check only buses passing through my stop and are behind my stop
+        /* Check only buses passing through my stop and are behind my stop */
+        if(bus.line.lineId == _user.busLine.lineId && (bus.lastSeenStop.stopId < _user.closestStop.stopId || [[bus currentLocation] distanceFromLocation:_user.closestStop.location] < busAtStopThreshold)){
             double distanceFromUser = [_user.currentLocation distanceFromLocation:bus.currentLocation];
             if(distanceFromNearestBus == 0 || distanceFromUser < distanceFromNearestBus){
                 distanceFromNearestBus = distanceFromUser;
@@ -582,8 +583,15 @@
         }
     }
     
+    /* In case there is no bus arround */
     if(_user.closestBus == nil){
         [_expectedArrivalTimeLabel setText:@"--:--"];
+        return;
+    }
+    
+    /* In case the bus is closeby the station */
+    if(_user.closestBus != nil && [_user.closestBus.currentLocation distanceFromLocation:_user.closestStop.location] < busAtStopThreshold){
+        [_expectedArrivalTimeLabel setText:[NSString stringWithFormat:NSLocalizedString(@"now", nil)]];
         return;
     }
     
