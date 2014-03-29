@@ -9,6 +9,7 @@
 #import "SH_SplashScreenViewController.h"
 #import <GoogleOpenSource/GoogleOpenSource.h>
 #import <GooglePlus/GooglePlus.h>
+#import "Reachability.h"
 
 static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elrnjd.apps.googleusercontent.com";
 
@@ -30,7 +31,7 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self checkNetworkConnection];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     
     GPPSignIn *signIn = [GPPSignIn sharedInstance];
@@ -52,6 +53,21 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
     //Silent authenticate failed, Go to login screen
     if(signInStatus == NO){
         [self presentLogin:self];
+    }
+}
+
+-(void)checkNetworkConnection
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable) {
+        UIAlertView *alert;
+        alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:NSLocalizedString(@"network_error", nil)]
+                                           message:[NSString stringWithFormat:NSLocalizedString(@"no_internet", nil)]
+                                          delegate:nil
+                                 cancelButtonTitle:[NSString stringWithFormat:NSLocalizedString(@"all_right", nil)]
+                                 otherButtonTitles:nil];
+        [alert show];
     }
 }
 
