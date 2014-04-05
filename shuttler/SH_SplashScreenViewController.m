@@ -7,14 +7,15 @@
 //
 
 #import "SH_SplashScreenViewController.h"
-#import <GoogleOpenSource/GoogleOpenSource.h>
-#import <GooglePlus/GooglePlus.h>
 #import "Reachability.h"
-
-static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elrnjd.apps.googleusercontent.com";
+#import "SH_Constants.h"
+#import "SH_DataHandler.h"
 
 @interface SH_SplashScreenViewController ()
-
+@property NSMutableData *_responseData;
+@property SH_DataHandler *dataHandler;
+@property NSString *username;
+@property NSString *passwordSHA;
 @end
 
 @implementation SH_SplashScreenViewController
@@ -33,27 +34,67 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
     [super viewDidLoad];
     [self checkNetworkConnection];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
+    _dataHandler = [SH_DataHandler sharedInstance];
+    [self authenticateUser];
+    }
+
+-(void) authenticateUser
+{
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    GPPSignIn *signIn = [GPPSignIn sharedInstance];
-    signIn.shouldFetchGooglePlusUser = YES;
-    signIn.shouldFetchGoogleUserEmail = YES;  // Uncomment to get the user's email
+    NSString *username = [defaults objectForKey:@"username"];
+    NSString *password_sha = [defaults objectForKey:@"password_sha"];
     
-    // You previously set kClientId in the "Initialize the Google+ client" step
-    signIn.clientID = kClientId;
-    
-    // Uncomment one of these two statements for the scope you chose in the previous step
-    //signIn.scopes = @[ kGTLAuthScopePlusLogin ];  // "https://www.googleapis.com/auth/plus.login" scope
-    signIn.scopes = @[ @"profile" ];            // "profile" scope
-    
-    // Optional: declare signIn.actions, see "app activities"
-    signIn.delegate = self;
-    
-    BOOL signInStatus = [signIn trySilentAuthentication];
-    
-    //Silent authenticate failed, Go to login screen
-    if(signInStatus == NO){
+    if(username && password_sha){
+        _username = username;
+        _passwordSHA = password_sha;
+    } else {
         [self presentLogin:self];
     }
+
+    
+    NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/authenticate/",Server_URL];
+    
+    //Construct the JSON here. Like string for now
+    NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"password\":\"%@\"}",
+                      _username,
+                      _passwordSHA];
+    
+    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:[NSURL URLWithString:requestURL]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    [request setTimeoutInterval:requestsTimeOut];
+    [NSURLConnection connectionWithRequest:request delegate:self];
+}
+
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    [self presentLogin:self];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    self._responseData = [[NSMutableData alloc] init];
+    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    long code = [httpResponse statusCode];
+    if(code == 200){
+        _dataHandler.user.signedIn = YES;
+        _dataHandler.user.username = _username;
+        [self presentHome:self];
+    } else {
+        [self presentLogin:self];
+    }
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    [self._responseData appendData:data];
 }
 
 -(void)checkNetworkConnection
@@ -80,22 +121,6 @@ static NSString * const kClientId = @"980435887734-8d0ri4s01lr8sf4i722a4fuf03elr
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)finishedWithAuth: (GTMOAuth2Authentication *)auth
-                   error: (NSError *) error
-{
-    /* Use these lines if you want some delay */
-//    NSDate *future = [NSDate dateWithTimeIntervalSinceNow: 1 ];
-//    [NSThread sleepUntilDate:future];
-    
-    if(error){
-        [self presentLogin:self];
-    } else {
-        if ([[GPPSignIn sharedInstance] authentication]) {
-            [self presentHome:self];
-        }
-    }
 }
 
 - (IBAction)presentHome:(id)sender

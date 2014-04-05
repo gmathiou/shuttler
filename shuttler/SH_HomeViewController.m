@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 fr.inria.arles. All rights reserved.
 //
 
-#import <GoogleOpenSource/GoogleOpenSource.h>
-#import <GooglePlus/GooglePlus.h>
 #import "SH_HomeViewController.h"
 #import "SH_ProfileViewController.h"
 #import "SH_StopAnnotation.h"
@@ -18,7 +16,6 @@
 @interface SH_HomeViewController ()
 @property NSMutableArray * annotationsToRemove; //Used for clearing the map markers
 @property NSTimer *hopOffTimer;
-@property GPPSignIn *signIn;
 @property NSMutableData *_responseData;
 @end
 
@@ -37,6 +34,7 @@
 {
     [super viewDidLoad];
     [self checkNetworkConnection];
+    
     self.navigationItem.hidesBackButton = YES;
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
@@ -49,10 +47,6 @@
     _annotationsToRemove        = dataHandler.annotationsToRemove;
     _locationManager            = dataHandler.locationManager;
     _busesRequestsTimer         = dataHandler.busesRequestsTimer;
-    
-    //Get Google Auth
-    _signIn = [GPPSignIn sharedInstance];
-    [_user setEmail:_signIn.authentication.userEmail];
     
     [self mapInit];
     [self locationTrackingInit];
@@ -190,7 +184,7 @@
         
         //Construct the JSON here. Like string for now
         NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"latitude\":\"%f\",\"longitude\":\"%f\",\"line\":\"%d\",\"lastseenstopid\":\"%d\"}",
-                          _user.email,
+                          _user.username,
                           _user.currentLocation.coordinate.latitude,
                           _user.currentLocation.coordinate.longitude,
                           _user.busLine.lineId,
@@ -252,7 +246,7 @@
  */
 - (void)requestBusesForLine
 {
-    NSString *URL           = [NSString stringWithFormat:@"%@Shuttler-server/webapi/busesforline/%@/%d",Server_URL,_user.email, _user.closestStop.line.lineId];
+    NSString *URL           = [NSString stringWithFormat:@"%@Shuttler-server/webapi/busesforline/%@/%d",Server_URL,_user.username, _user.closestStop.line.lineId];
     NSURLRequest *request   = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
     [NSURLConnection connectionWithRequest:request delegate:self];
 }
@@ -434,7 +428,7 @@
     
     //Construct JSON as string and send the request to server
     NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"latitude\":\"%f\",\"longitude\":\"%f\",\"lineid\":\"%d\"}",
-                      _user.email,
+                      _user.username,
                       _user.currentLocation.coordinate.latitude,
                       _user.currentLocation.coordinate.longitude,
                       _user.busLine.lineId];
@@ -472,7 +466,7 @@
     
     //Construct JSON as string
     NSString *post      = [NSString stringWithFormat: @"{\"email\":\"%@\",\"kilometers\":\"%f\"}",
-                           _user.email,
+                           _user.username,
                            _user.distanceTravelled];
     NSData *postData    = [post dataUsingEncoding:NSUTF8StringEncoding];
     

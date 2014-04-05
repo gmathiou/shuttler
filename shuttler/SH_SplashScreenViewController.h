@@ -7,10 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <GoogleOpenSource/GoogleOpenSource.h>
-#import <GooglePlus/GooglePlus.h>
 
-@interface SH_SplashScreenViewController : UIViewController  <GPPSignInDelegate>
+@interface SH_SplashScreenViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
 
 @end

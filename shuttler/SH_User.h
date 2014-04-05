@@ -13,10 +13,8 @@
 #import "SH_BusLine.h"
 
 @interface SH_User : NSObject
-
-@property (strong, nonatomic) NSString *email;
-@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) NSData *image;
+@property BOOL signedIn;
+@property (strong, nonatomic) NSString *username;
 @property BOOL onBoard;
 @property (strong, nonatomic) CLLocation *currentLocation;
 @property (strong, nonatomic) SH_Bus *closestBus;

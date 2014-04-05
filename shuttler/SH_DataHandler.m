@@ -29,6 +29,7 @@
         _stops                  = [NSMutableDictionary dictionary]; //All available stops
         _annotationsToRemove    = [NSMutableArray array];
         _locationManager        = [[CLLocationManager alloc] init];
+        _user.signedIn          = NO;
     }
     return self;
 }

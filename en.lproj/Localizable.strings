@@ -28,3 +28,7 @@
 "auth_error"            = "Authentication error";
 "auth_error_desc"       = "Something went bad with authentication";
 "now"                   = "now";
+"fillin_all_fields"     = "You must fill-in all fields";
+"connection_error"      = "Connection Error";
+"account_not_exists"    = "Account does not exist";
+"account_exists"        = "Username already taken";

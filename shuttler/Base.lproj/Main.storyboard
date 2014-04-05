@@ -16,41 +16,110 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="j1p-f3-Qyl">
-                                <rect key="frame" x="0.0" y="0.0" width="332" height="568"/>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="N2h-RS-Kfn">
+                                <rect key="frame" x="0.0" y="-7" width="320" height="582"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TkE-lc-A4i" customClass="GPPSignInButton">
-                                <rect key="frame" x="114" y="474" width="93" height="48"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="gpp_sign_in_light_button_disabled.png">
-                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="YTQ-sK-CZk">
-                                <rect key="frame" x="46" y="67" width="229" height="71"/>
+                                <rect key="frame" x="45" y="35" width="229" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jyM-dP-3ZI">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="unlessEditing" translatesAutoresizingMaskIntoConstraints="NO" id="rdb-N3-sEp">
+                                        <rect key="frame" x="20" y="346" width="280" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="r9F-21-Roa"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="light" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="vXZ-lx-hvc" id="acF-Al-HHb"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eKQ-4H-wRN">
+                                        <rect key="frame" x="20" y="393" width="280" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="uIY-PZ-jib"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="light" returnKeyType="go" secureTextEntry="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="vXZ-lx-hvc" id="Mln-ve-YFT"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uoy-UA-E5R">
+                                        <rect key="frame" x="20" y="442" width="280" height="43"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.89019607840000003" green="0.2156862745" blue="0.16078431369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                        <state key="normal" title="SIGN-IN">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="signInButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="rug-Ly-yx7"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="NLw-do-fyz">
+                                        <rect key="frame" x="20" y="497" width="280" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
+                                        <state key="normal" title="Create a new account">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="registerButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="6am-hY-5rz"/>
+                                        </connections>
+                                    </button>
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3bC-9Z-iqF">
+                                        <rect key="frame" x="21" y="307" width="13" height="29"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.89019607840000003" green="0.2156862745" blue="0.16078431369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    </imageView>
+                                    <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y90-Sc-njQ">
+                                        <rect key="frame" x="40" y="311" width="252" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="ijN-3g-TVl">
+                                        <rect key="frame" x="272" y="454" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                            </scrollView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="esX-JD-fl7" firstAttribute="top" secondItem="TkE-lc-A4i" secondAttribute="bottom" constant="46" id="DdM-88-S0t"/>
-                            <constraint firstItem="TkE-lc-A4i" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="EAu-Ya-l0P"/>
-                        </constraints>
+                        <color key="backgroundColor" red="0.92235331629999995" green="0.92235331629999995" blue="0.92235331629999995" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="fVN-6Y-4gx"/>
                     <connections>
-                        <outlet property="signInButton" destination="TkE-lc-A4i" id="OgZ-ku-Fx6"/>
+                        <outlet property="errorMsgImage" destination="3bC-9Z-iqF" id="eAQ-9g-zAZ"/>
+                        <outlet property="errorMsgLabel" destination="Y90-Sc-njQ" id="M1j-D8-Dvk"/>
+                        <outlet property="formScrollView" destination="jyM-dP-3ZI" id="qtY-UU-eEi"/>
+                        <outlet property="passwordTextField" destination="eKQ-4H-wRN" id="4vE-v2-Etv"/>
+                        <outlet property="registerButton" destination="NLw-do-fyz" id="0em-3s-Qmc"/>
+                        <outlet property="signInLoadingIndicator" destination="ijN-3g-TVl" id="3xH-CV-Bmp"/>
+                        <outlet property="signinButton" destination="Uoy-UA-E5R" id="yl4-ra-ypP"/>
+                        <outlet property="usernameTextField" destination="rdb-N3-sEp" id="kTP-iH-HeK"/>
                         <segue destination="vjx-wP-jrL" kind="push" identifier="loginToHomeSegue" id="thW-PQ-Wh4"/>
                         <segue destination="Krn-Fh-g28" kind="push" identifier="loginToTutorialSegue" id="vIT-fv-xeC"/>
                         <segue destination="4Xp-oo-bRu" kind="unwind" identifier="unwindToLoginSegue" unwindAction="goToLogin:" id="qL9-j9-WPL"/>
+                        <segue destination="mW5-j0-lSf" kind="push" identifier="loginToRegistrationSegue" id="oD6-ID-hGn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <exit id="4Xp-oo-bRu" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1481" y="967"/>
+            <point key="canvasLocation" x="1503" y="927"/>
         </scene>
         <!--Home View Controller - Home-->
         <scene sceneID="Pfl-ga-q9E">
@@ -200,7 +269,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IaX-cV-jCk" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="kHP-gu-60y" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2532" y="392"/>
+            <point key="canvasLocation" x="2498" y="551"/>
         </scene>
         <!--Profile View Controller - Profile-->
         <scene sceneID="trR-Vs-MIo">
@@ -330,7 +399,121 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZlX-OX-g02" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3749" y="700"/>
+            <point key="canvasLocation" x="3731" y="1940"/>
+        </scene>
+        <!--Register View Controller - Register-->
+        <scene sceneID="9av-tw-cYC">
+            <objects>
+                <viewController title="Register" id="mW5-j0-lSf" customClass="SH_RegisterViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2BE-c3-JTd"/>
+                        <viewControllerLayoutGuide type="bottom" id="1X2-Ve-W8p"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="mJ2-VR-VX5">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bg2.png" translatesAutoresizingMaskIntoConstraints="NO" id="9MZ-dT-Icg">
+                                <rect key="frame" x="0.0" y="-7" width="320" height="582"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="wbX-ty-Ain">
+                                <rect key="frame" x="45" y="35" width="229" height="71"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8OT-sR-2T0">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="unlessEditing" translatesAutoresizingMaskIntoConstraints="NO" id="lDP-9h-rgR">
+                                        <rect key="frame" x="20" y="346" width="280" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="DSw-9Y-SC2"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="light" returnKeyType="next" enablesReturnKeyAutomatically="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="mW5-j0-lSf" id="PpU-5f-3Dv"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vzL-Eb-tEt">
+                                        <rect key="frame" x="20" y="393" width="280" height="40"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="aR4-pN-s9J"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardAppearance="light" returnKeyType="go" enablesReturnKeyAutomatically="YES" secureTextEntry="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="mW5-j0-lSf" id="kwE-Fl-Uj3"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OyH-GW-2VT">
+                                        <rect key="frame" x="20" y="442" width="280" height="43"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.89019607840000003" green="0.2156862745" blue="0.16078431369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                        <state key="normal" title="CREATE ACCOUNT">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="registerButtonPressed:" destination="mW5-j0-lSf" eventType="touchUpInside" id="WAF-7o-pfk"/>
+                                            <action selector="signInButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="ZPP-HT-04j"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="wmw-oC-STm">
+                                        <rect key="frame" x="20" y="497" width="280" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
+                                        <state key="normal" title="Already have an account? Sign-in">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="nEX-4h-S6G" kind="unwind" unwindAction="goToLogin:" id="bkU-z3-IG3"/>
+                                        </connections>
+                                    </button>
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R6v-g9-Ocr">
+                                        <rect key="frame" x="21" y="307" width="13" height="29"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.89019607840000003" green="0.2156862745" blue="0.16078431369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    </imageView>
+                                    <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lB6-hU-zAx">
+                                        <rect key="frame" x="40" y="311" width="252" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="WCt-Yl-SVu">
+                                        <rect key="frame" x="272" y="454" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="w8i-bf-nXS"/>
+                    <connections>
+                        <outlet property="errorMsgImage" destination="R6v-g9-Ocr" id="Djo-Cn-RSv"/>
+                        <outlet property="errorMsgLabel" destination="lB6-hU-zAx" id="WW5-tE-WlO"/>
+                        <outlet property="formScrollView" destination="8OT-sR-2T0" id="Adr-wt-UFi"/>
+                        <outlet property="passwordTextField" destination="vzL-Eb-tEt" id="0uy-7a-uoT"/>
+                        <outlet property="registerButton" destination="OyH-GW-2VT" id="xec-3p-yAC"/>
+                        <outlet property="registerLoadingIndicator" destination="WCt-Yl-SVu" id="qYf-rR-7T0"/>
+                        <outlet property="usernameTextField" destination="lDP-9h-rgR" id="K9q-cY-f5w"/>
+                        <segue destination="vjx-wP-jrL" kind="push" identifier="registrationToHomeSegue" id="jXY-2k-WUB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="SCl-LC-Sqd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="nEX-4h-S6G" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="243" y="627"/>
         </scene>
         <!--Splash Screen View Controller - Splash-->
         <scene sceneID="7d9-w6-6Ku">
@@ -344,8 +527,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="256" verticalHuggingPriority="251" fixedFrame="YES" image="bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="qJR-vE-O4j">
-                                <rect key="frame" x="0.0" y="-5" width="320" height="573"/>
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="256" verticalHuggingPriority="251" fixedFrame="YES" image="bg.png" translatesAutoresizingMaskIntoConstraints="NO" id="qJR-vE-O4j">
+                                <rect key="frame" x="0.0" y="-8" width="320" height="583"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ZC4-Kd-9g0">
@@ -353,10 +536,10 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="Z1s-i4-AWJ">
-                                <rect key="frame" x="46" y="67" width="229" height="71"/>
+                                <rect key="frame" x="46" y="35" width="229" height="71"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="v 1.0" textAlignment="center" lineBreakMode="clip" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4bG-qn-Pm9">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="v 1.2" textAlignment="center" lineBreakMode="clip" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4bG-qn-Pm9">
                                 <rect key="frame" x="121" y="497" width="80" height="15"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
@@ -544,15 +727,33 @@
             </objects>
             <point key="canvasLocation" x="1387" y="2799"/>
         </scene>
+        <!--Navigation Controller - Registration-->
+        <scene sceneID="Q9v-fH-mna">
+            <objects>
+                <navigationController title="Registration" automaticallyAdjustsScrollViewInsets="NO" id="0jA-hM-ce2" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Uxg-RL-l8Z">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="mW5-j0-lSf" kind="relationship" relationship="rootViewController" id="Gor-Ce-o8f"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FG1-FJ-u7t" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-307" y="179"/>
+        </scene>
     </scenes>
     <resources>
         <image name="bg.png" width="320" height="568"/>
+        <image name="bg2.png" width="320" height="568"/>
         <image name="bus.png" width="63" height="64"/>
-        <image name="gpp_sign_in_light_button_disabled.png" width="93" height="48"/>
         <image name="home-bg.png" width="640" height="1136"/>
         <image name="hop-on-btn-pressed.png" width="170" height="49"/>
         <image name="hop-on-btn.png" width="170" height="51"/>
-        <image name="logo.png" width="500" height="118"/>
+        <image name="logo.png" width="365" height="48"/>
         <image name="profileIcon.png" width="21" height="21"/>
         <image name="uknown.png" width="150" height="150"/>
     </resources>
@@ -562,9 +763,10 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="yfo-li-wcp"/>
-        <segue reference="uDx-G7-Qp6"/>
         <segue reference="ACh-4a-2NA"/>
+        <segue reference="yfo-li-wcp"/>
+        <segue reference="jXY-2k-WUB"/>
+        <segue reference="oD6-ID-hGn"/>
         <segue reference="vIT-fv-xeC"/>
     </inferredMetricsTieBreakers>
 </document>

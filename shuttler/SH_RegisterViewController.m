@@ -1,25 +1,25 @@
 //
-//  SH_ViewController.m
+//  SH_RegisterViewController.m
 //  shuttler
 //
-//  Created by Georgios Mathioudakis on 13/2/14.
+//  Created by Georgios Mathioudakis on 5/4/14.
 //  Copyright (c) 2014 fr.inria.arles. All rights reserved.
 //
 
-#import "SH_LoginViewController.h"
+#import "SH_RegisterViewController.h"
 #import "SH_HomeViewController.h"
 #import "Reachability.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "SH_DataHandler.h"
 
-@interface SH_LoginViewController ()
+@interface SH_RegisterViewController ()
 @property NSMutableData *_responseData;
 @property SH_DataHandler *dataHandler;
 @property NSString *inputUsername;
 @property NSString *inputPasswordSHA;
 @end
 
-@implementation SH_LoginViewController
+@implementation SH_RegisterViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -36,6 +36,12 @@
     [self checkNetworkConnection];
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     _dataHandler = [SH_DataHandler sharedInstance];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 -(void)checkNetworkConnection
@@ -90,7 +96,6 @@
 {
     [super viewWillAppear:animated];
     [self registerForKeyboardNotifications];
-    [self.formScrollView setContentOffset:CGPointZero animated:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -138,33 +143,16 @@
     } else {
         // Not found, so remove keyboard.
         [textField resignFirstResponder];
-        
         if(_usernameTextField.text.length > 0 && _passwordTextField.text.length >0){
-            [self sendAuthenticationRequest];
+            [self sendRegistrationRequest];
         }
     }
     return NO; // We do not want UITextField to insert line-breaks.
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (IBAction)presentHome:(id)sender
 {
-    [self performSegueWithIdentifier:@"loginToHomeSegue" sender:sender];
-}
-
-- (IBAction)presentRegistration:(id)sender
-{
-    [self performSegueWithIdentifier:@"loginToRegistrationSegue" sender:sender];
-}
-
-- (IBAction)presentTutorial:(id)sender
-{
-    [self performSegueWithIdentifier:@"loginToTutorialSegue" sender:sender];
+    [self performSegueWithIdentifier:@"registrationToHomeSegue" sender:sender];
 }
 
 -(NSString*) sha1:(NSString*)input
@@ -179,42 +167,6 @@
     return output;
 }
 
-- (IBAction)signInButtonPressed:(id)sender
-{
-    [self sendAuthenticationRequest];
-}
-
--(void) sendAuthenticationRequest
-{
-    if(_usernameTextField.text.length == 0 || _passwordTextField.text.length == 0){
-        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"fillin_all_fields", nil)]];
-        [_errorMsgImage setHidden:NO];
-        [_errorMsgLabel setHidden:NO];
-        return;
-    }
-    NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/authenticate/",Server_URL];
-    NSString *sha1Pass = [self sha1:_passwordTextField.text];
-    
-    //Construct the JSON here. Like string for now
-    NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"password\":\"%@\"}",
-                      _usernameTextField.text,
-                      sha1Pass];
-    
-    _inputUsername =_usernameTextField.text;
-    _inputPasswordSHA = sha1Pass;
-    
-    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding];
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:requestURL]];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setHTTPBody:postData];
-    [request setTimeoutInterval:requestsTimeOut];
-    [NSURLConnection connectionWithRequest:request delegate:self];
-    
-    [_signInLoadingIndicator setHidden:NO];
-}
-
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
 }
@@ -226,7 +178,7 @@
     } else {
         [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"connection_error", nil)]];
     }
-    [_signInLoadingIndicator setHidden:YES];
+    [_registerLoadingIndicator setHidden:YES];
     [_errorMsgImage setHidden:NO];
     [_errorMsgLabel setHidden:NO];
 }
@@ -252,22 +204,51 @@
         
         [self presentHome:self];
     } else {
-        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"account_not_exists", nil)]];
+        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"account_exists", nil)]];
         [_errorMsgImage setHidden:NO];
         [_errorMsgLabel setHidden:NO];
     }
-    [_signInLoadingIndicator setHidden:YES];
+    [_registerLoadingIndicator setHidden:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     [self._responseData appendData:data];
 }
 
-- (IBAction)goToLogin: (UIStoryboardSegue*) segue
-{
-}
 
 - (IBAction)registerButtonPressed:(id)sender {
-    [self presentRegistration:self];
+    [self sendRegistrationRequest];
 }
+
+-(void)sendRegistrationRequest
+{
+    if(_usernameTextField.text.length == 0 || _passwordTextField.text.length == 0){
+        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"fillin_all_fields", nil)]];
+        [_errorMsgImage setHidden:NO];
+        [_errorMsgLabel setHidden:NO];
+        return;
+    }
+    NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/registration/",Server_URL];
+    NSString *sha1Pass = [self sha1:_passwordTextField.text];
+    
+    //Construct the JSON here. Like string for now
+    NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"password\":\"%@\"}",
+                      _usernameTextField.text,
+                      sha1Pass];
+    
+    _inputUsername =_usernameTextField.text;
+    _inputPasswordSHA = sha1Pass;
+    
+    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:[NSURL URLWithString:requestURL]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPBody:postData];
+    [request setTimeoutInterval:requestsTimeOut];
+    [NSURLConnection connectionWithRequest:request delegate:self];
+    
+    [_registerLoadingIndicator setHidden:NO];
+}
+
 @end

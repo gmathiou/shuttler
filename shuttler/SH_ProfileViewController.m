@@ -7,8 +7,6 @@
 //
 
 #import "SH_ProfileViewController.h"
-#import <GoogleOpenSource/GoogleOpenSource.h>
-#import <GooglePlus/GooglePlus.h>
 #import "SH_Constants.h"
 #import "SH_DataHandler.h"
 
@@ -42,53 +40,17 @@
     [self.userProfileImage.layer setBorderColor:[[UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:0.25f] CGColor]];
     [self.userProfileImage.layer setBorderWidth:10.0];
     
-    [self getGoogleProfileData];
     [self getDataFromShuttlerServer];
     
     _dataHandler = [SH_DataHandler sharedInstance];
+    _profileName.text = _dataHandler.user.username;
 }
 
--(void)getGoogleProfileData
-{
-    if(_user.image == nil) {
-        
-        /* Get profile data */
-        GPPSignIn *signIn = [GPPSignIn sharedInstance];
-        GTLServicePlus* plusService = [[GTLServicePlus alloc] init];
-        plusService.retryEnabled = YES;
-        [plusService setAuthorizer:signIn.authentication];
-        GTLQueryPlus *query = [GTLQueryPlus queryForPeopleGetWithUserId:@"me"];
-        
-        [plusService executeQuery:query
-                completionHandler:^(GTLServiceTicket *ticket,
-                                    GTLPlusPerson *person,
-                                    NSError *error) {
-                    if (error) {
-                        GTMLoggerError(@"Error: %@", error);
-                    } else {
-                        NSString *name = [NSString stringWithFormat:@"%@",person.displayName];
-                        [_user setName:name];
-                        [_profileName setText:name];
-                        GTLPlusPersonImage *profileImg = person.image;
-                        NSString *strimag = profileImg.url;
-                        NSString *largerImgURL = [strimag stringByReplacingOccurrencesOfString:@"sz=50" withString:@"sz=400"];
-                        NSData *receivedData = [NSData dataWithContentsOfURL:[NSURL URLWithString:largerImgURL]];
-                        UIImage *img = [[UIImage alloc] initWithData:receivedData ];
-                        receivedData=UIImageJPEGRepresentation(img,200);
-                        _userProfileImage.image = [UIImage imageWithData:receivedData];
-                        [_user setImage:receivedData];
-                    }
-                }];
-    } else {
-        _userProfileImage.image = [UIImage imageWithData:_user.image];
-        [_profileName setText:_user.name];
-    }
-}
 
 -(void)getDataFromShuttlerServer
 {
     // Create the request.
-    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/profile/%@",Server_URL, _user.email];
+    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/profile/%@",Server_URL, _user.username];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
     
     // Create url connection and fire request
@@ -104,7 +66,6 @@
 - (IBAction)signOutButtonPressed:(id)sender {
     [_dataHandler.busesRequestsTimer invalidate];
     [self signOut];
-    [_user setImage:nil];
     [self presentLogin:self];
 }
 
@@ -143,16 +104,17 @@
 }
 
 - (void)signOut {
-    [[GPPSignIn sharedInstance] signOut];
+    _dataHandler.user.signedIn = NO;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"username"];
+    [defaults removeObjectForKey:@"password_sha"];
+    [defaults synchronize];
+    [self presentLogin:self];
 }
 
 #pragma mark NSURLConnection Delegate Methods
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    // A response has been received, this is where we initialize the instance var you created
-    // so that we can append data to it in the didReceiveData method
-    // Furthermore, this method is called each time there is a redirect so reinitializing it
-    // also serves to clear it
     self._responseData = [[NSMutableData alloc] init];
 }
 
@@ -164,15 +126,10 @@
 
 - (NSCachedURLResponse *)connection:(NSURLConnection *)connection
                   willCacheResponse:(NSCachedURLResponse*)cachedResponse {
-    // Return nil to indicate not necessary to store a cached response for this connection
-    //NSLog(@"Connection");
     return nil;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    // The request is complete and data has been received
-    // You can parse the stuff in your instance variable now
-    // convert to JSON
     NSError *myError = nil;
     NSDictionary *res = [NSJSONSerialization JSONObjectWithData:self._responseData options:NSJSONReadingMutableLeaves error:&myError];
     NSString *rank = [res objectForKey:@"rank"];
