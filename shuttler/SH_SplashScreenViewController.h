@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <FacebookSDK/FacebookSDK.h>
 
-@interface SH_SplashScreenViewController : UIViewController
+@interface SH_SplashScreenViewController : UIViewController <FBLoginViewDelegate>
+- (IBAction)loginButtonPressed:(id)sender;
+- (IBAction)registerButtonPressed:(id)sender;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+@property (weak, nonatomic) IBOutlet FBLoginView *facebookLoginView;
 
 @end

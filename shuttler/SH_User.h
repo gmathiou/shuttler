@@ -14,7 +14,12 @@
 
 @interface SH_User : NSObject
 @property BOOL signedIn;
+@property BOOL facebookLogedIn;
+@property (strong, nonatomic) NSString *identification;
 @property (strong, nonatomic) NSString *username;
+@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) NSData *image;
+@property (strong, nonatomic) NSString *password;
 @property BOOL onBoard;
 @property (strong, nonatomic) CLLocation *currentLocation;
 @property (strong, nonatomic) SH_Bus *closestBus;

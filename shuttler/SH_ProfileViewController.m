@@ -40,17 +40,59 @@
     [self.userProfileImage.layer setBorderColor:[[UIColor colorWithRed:255.0f/255.0f green:255.0f/255.0f blue:255.0f/255.0f alpha:0.25f] CGColor]];
     [self.userProfileImage.layer setBorderWidth:10.0];
     
-    [self getDataFromShuttlerServer];
-    
     _dataHandler = [SH_DataHandler sharedInstance];
-    _profileName.text = _dataHandler.user.username;
+    _profileName.text = _dataHandler.user.name;
+    [self getDataFromShuttlerServer];
 }
 
+- (void) viewWillAppear:(BOOL)animated
+{
+    if(_dataHandler.user.facebookLogedIn == YES)
+    {
+        [_facebookLoginView setHidden:NO];
+        [_signOutButton setHidden:YES];
+    } else {
+        [_facebookLoginView setHidden:YES];
+        [_signOutButton setHidden:NO];
+    }
+}
+
+- (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
+    if(_dataHandler.user.facebookLogedIn == NO)
+        return;
+    
+    _dataHandler.user.signedIn = NO;
+    _dataHandler.user.facebookLogedIn = NO;
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"username"];
+    [defaults removeObjectForKey:@"password_sha"];
+    [defaults synchronize];
+    [self presentSplash:self];
+}
+
+-(void)initProfileImage
+{
+    if(_dataHandler.user.facebookLogedIn == YES){
+        if(_dataHandler.user.image != nil){
+            _userProfileImage.image = [UIImage imageWithData:_dataHandler.user.image];
+        } else {
+            NSString *largerImgURL = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?width=200", _dataHandler.user.username];
+            NSData *receivedData = [NSData dataWithContentsOfURL:[NSURL URLWithString:largerImgURL]];
+            UIImage *img = [[UIImage alloc] initWithData:receivedData ];
+            receivedData=UIImageJPEGRepresentation(img,200);
+            _userProfileImage.image = [UIImage imageWithData:receivedData];
+            [_dataHandler.user  setImage:receivedData];
+        }
+    } else {
+        UIImage *image = [UIImage imageNamed:@"id.png"];
+        _userProfileImage.image = image;
+    }
+}
 
 -(void)getDataFromShuttlerServer
 {
     // Create the request.
-    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/profile/%@",Server_URL, _user.username];
+    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/profile/%@",Server_URL, _user.identification];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
     
     // Create url connection and fire request
@@ -65,14 +107,18 @@
 
 - (IBAction)signOutButtonPressed:(id)sender {
     [_dataHandler.busesRequestsTimer invalidate];
-    [self signOut];
-    [self presentLogin:self];
+    _dataHandler.user = [[SH_User alloc] init];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"username"];
+    [defaults removeObjectForKey:@"password_sha"];
+    [defaults synchronize];
+    [self presentSplash:self];
 }
 
-- (IBAction)presentLogin:(id)sender
+- (IBAction)presentSplash:(id)sender
 {
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-    SEL theUnwindSelector = NSSelectorFromString(@"goToLogin:");
+    SEL theUnwindSelector = NSSelectorFromString(@"goToSplash:");
     NSString *unwindSegueIdentifier = @"unwindToLoginSeque";
     
     UINavigationController *nc = [self navigationController];
@@ -83,7 +129,7 @@
     // None found, then do nothing.
     if (viewControllerToCallUnwindSelectorOn == nil) {
         NSLog(@"No controller found to unwind too");
-        [self performSegueWithIdentifier:@"profileToLoginSegue" sender:sender];
+        [self performSegueWithIdentifier:@"profileToSplashSegue" sender:sender];
         return;
     }
     
@@ -101,15 +147,6 @@
         
         [unwindSegue perform];
     }
-}
-
-- (void)signOut {
-    _dataHandler.user.signedIn = NO;
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:@"username"];
-    [defaults removeObjectForKey:@"password_sha"];
-    [defaults synchronize];
-    [self presentLogin:self];
 }
 
 #pragma mark NSURLConnection Delegate Methods
@@ -145,6 +182,9 @@
     [_viewsLabel setText: [NSString stringWithFormat:@"%@",views]];
     [_rankLabel setText:[NSString stringWithFormat:@"#%@",rank]];
     [_kilometersLabel setText:[NSString stringWithFormat:@"%@",km]];
+    
+    //Everytning is loaded, now you can download image
+    [self initProfileImage];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

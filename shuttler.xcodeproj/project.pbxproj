@@ -82,6 +82,13 @@
 		42BFBCB518BCA814007C311E /* SH_BusAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 42BFBCB418BCA814007C311E /* SH_BusAnnotation.m */; };
 		42BFBCB818BCAAA3007C311E /* bus_pin.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BFBCB618BCAAA3007C311E /* bus_pin.png */; };
 		42BFBCB918BCAAA3007C311E /* bus_pin@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42BFBCB718BCAAA3007C311E /* bus_pin@2x.png */; };
+		42D8022618F170620084B28D /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42D8010118F170610084B28D /* FacebookSDK.framework */; };
+		42D802F718F188600084B28D /* bg-plain.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D802F518F188600084B28D /* bg-plain.png */; };
+		42D802F818F188600084B28D /* bg-plain@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D802F618F188600084B28D /* bg-plain@2x.png */; };
+		42D802FB18F1E23D0084B28D /* passport.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D802F918F1E23C0084B28D /* passport.png */; };
+		42D802FC18F1E23D0084B28D /* passport@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D802FA18F1E23D0084B28D /* passport@2x.png */; };
+		42D802FF18F1E3C30084B28D /* id.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D802FD18F1E3C30084B28D /* id.png */; };
+		42D8030018F1E3C30084B28D /* id@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42D802FE18F1E3C30084B28D /* id@2x.png */; };
 		42E58EDB18E24BCC00ECF65C /* SH_DataHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E58EDA18E24BCC00ECF65C /* SH_DataHandler.m */; };
 		42EF8C3418F03B3200ECE3F8 /* bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42EF8C3318F03B3200ECE3F8 /* bg@2x.png */; };
 		42EF8C3618F03B5000ECE3F8 /* home-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 42EF8C3518F03B5000ECE3F8 /* home-bg@2x.png */; };
@@ -149,9 +156,6 @@
 		42769EF418AD2A3100929870 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		42769EF618AD2A3900929870 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		42769EF818AD2A4300929870 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		42769F0118AD313900929870 /* GoogleOpenSource.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleOpenSource.framework; path = shuttler/Google/GoogleOpenSource.framework; sourceTree = "<group>"; };
-		42769F0218AD313900929870 /* GooglePlus.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = GooglePlus.bundle; path = shuttler/Google/GooglePlus.bundle; sourceTree = "<group>"; };
-		42769F0318AD313900929870 /* GooglePlus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GooglePlus.framework; path = shuttler/Google/GooglePlus.framework; sourceTree = "<group>"; };
 		4286B4CF18BFA241000DF272 /* AppIcon29x29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIcon29x29.png; sourceTree = "<group>"; };
 		4286B4D018BFA241000DF272 /* AppIcon29x29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon29x29@2x.png"; sourceTree = "<group>"; };
 		4286B4D118BFA241000DF272 /* AppIcon40x40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppIcon40x40.png; sourceTree = "<group>"; };
@@ -198,6 +202,13 @@
 		42BFBCB418BCA814007C311E /* SH_BusAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SH_BusAnnotation.m; sourceTree = "<group>"; };
 		42BFBCB618BCAAA3007C311E /* bus_pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bus_pin.png; path = Images/bus_pin.png; sourceTree = "<group>"; };
 		42BFBCB718BCAAA3007C311E /* bus_pin@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bus_pin@2x.png"; path = "Images/bus_pin@2x.png"; sourceTree = "<group>"; };
+		42D8010118F170610084B28D /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = /Users/mathioud/Documents/FacebookSDK/FacebookSDK.framework; sourceTree = "<absolute>"; };
+		42D802F518F188600084B28D /* bg-plain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-plain.png"; path = "Images/bg-plain.png"; sourceTree = "<group>"; };
+		42D802F618F188600084B28D /* bg-plain@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg-plain@2x.png"; path = "Images/bg-plain@2x.png"; sourceTree = "<group>"; };
+		42D802F918F1E23C0084B28D /* passport.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = passport.png; path = Images/passport.png; sourceTree = "<group>"; };
+		42D802FA18F1E23D0084B28D /* passport@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "passport@2x.png"; path = "Images/passport@2x.png"; sourceTree = "<group>"; };
+		42D802FD18F1E3C30084B28D /* id.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = id.png; path = Images/id.png; sourceTree = "<group>"; };
+		42D802FE18F1E3C30084B28D /* id@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "id@2x.png"; path = "Images/id@2x.png"; sourceTree = "<group>"; };
 		42E58ED918E24BCC00ECF65C /* SH_DataHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SH_DataHandler.h; sourceTree = "<group>"; };
 		42E58EDA18E24BCC00ECF65C /* SH_DataHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SH_DataHandler.m; sourceTree = "<group>"; };
 		42EF8C3318F03B3200ECE3F8 /* bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bg@2x.png"; path = "Images/bg@2x.png"; sourceTree = "<group>"; };
@@ -222,6 +233,7 @@
 				42769EF318AD2A2900929870 /* CoreText.framework in Frameworks */,
 				42769EF118AD2A2100929870 /* CoreMotion.framework in Frameworks */,
 				42769EEF18AD2A1B00929870 /* CoreLocation.framework in Frameworks */,
+				42D8022618F170620084B28D /* FacebookSDK.framework in Frameworks */,
 				42769EED18AD2A1400929870 /* AssetsLibrary.framework in Frameworks */,
 				42769EEB18AD2A0D00929870 /* AddressBook.framework in Frameworks */,
 				42769EAE18AD176000929870 /* CoreGraphics.framework in Frameworks */,
@@ -275,10 +287,8 @@
 		42769EAA18AD176000929870 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				42D8010118F170610084B28D /* FacebookSDK.framework */,
 				4214069918B24DEC005D4076 /* MapKit.framework */,
-				42769F0218AD313900929870 /* GooglePlus.bundle */,
-				42769F0118AD313900929870 /* GoogleOpenSource.framework */,
-				42769F0318AD313900929870 /* GooglePlus.framework */,
 				42769EF818AD2A4300929870 /* SystemConfiguration.framework */,
 				42769EF618AD2A3900929870 /* Security.framework */,
 				42769EF418AD2A3100929870 /* MediaPlayer.framework */,
@@ -423,6 +433,12 @@
 			children = (
 				42EF8C3718F03B5C00ECE3F8 /* logo@2x.png */,
 				42EF8C3518F03B5000ECE3F8 /* home-bg@2x.png */,
+				42D802FD18F1E3C30084B28D /* id.png */,
+				42D802FE18F1E3C30084B28D /* id@2x.png */,
+				42D802F518F188600084B28D /* bg-plain.png */,
+				42D802F618F188600084B28D /* bg-plain@2x.png */,
+				42D802F918F1E23C0084B28D /* passport.png */,
+				42D802FA18F1E23D0084B28D /* passport@2x.png */,
 				42EF8C3C18F0C25A00ECE3F8 /* bg2.png */,
 				42EF8C3D18F0C25A00ECE3F8 /* bg2@2x.png */,
 				42EF8C3318F03B3200ECE3F8 /* bg@2x.png */,
@@ -523,6 +539,7 @@
 				en,
 				Base,
 				fr,
+				he,
 			);
 			mainGroup = 42769E9F18AD176000929870;
 			productRefGroup = 42769EA918AD176000929870 /* Products */;
@@ -545,6 +562,7 @@
 				4286B4E918BFA241000DF272 /* AppIcon72x72.png in Resources */,
 				42BFBCB918BCAAA3007C311E /* bus_pin@2x.png in Resources */,
 				42B3DD1618B2A3580091FCE5 /* hop-on-btn@2x.png in Resources */,
+				42D802FB18F1E23D0084B28D /* passport.png in Resources */,
 				42EF8C3E18F0C25A00ECE3F8 /* bg2.png in Resources */,
 				42522B4418C7D8E700C94B58 /* uknown@2x.png in Resources */,
 				4286B4E518BFA241000DF272 /* AppIcon57x57.png in Resources */,
@@ -556,6 +574,7 @@
 				42BFBCB118BCA69E007C311E /* stop_pin.png in Resources */,
 				42B3DD1518B2A3580091FCE5 /* hop-on-btn.png in Resources */,
 				4286B4EE18BFA241000DF272 /* iTunesArtwork@2x.png in Resources */,
+				42D8030018F1E3C30084B28D /* id@2x.png in Resources */,
 				4286B4EA18BFA241000DF272 /* AppIcon72x72@2x.png in Resources */,
 				42EF8C3418F03B3200ECE3F8 /* bg@2x.png in Resources */,
 				4261B4DE18C4C5560081C21D /* bus.png in Resources */,
@@ -566,19 +585,23 @@
 				42B57DF818AE5FEA00C44991 /* bg.png in Resources */,
 				42EF8C3818F03B5C00ECE3F8 /* logo@2x.png in Resources */,
 				4286B4E118BFA241000DF272 /* AppIcon40x40.png in Resources */,
+				42D802F818F188600084B28D /* bg-plain@2x.png in Resources */,
 				42B3DD1918B2A7B60091FCE5 /* hop-on-btn-pressed.png in Resources */,
 				42769EC418AD176000929870 /* Images.xcassets in Resources */,
 				4286B4ED18BFA241000DF272 /* iTunesArtwork.png in Resources */,
 				42BFBCB218BCA69E007C311E /* stop_pin@2x.png in Resources */,
+				42D802FC18F1E23D0084B28D /* passport@2x.png in Resources */,
 				4286B4E318BFA241000DF272 /* AppIcon50x50.png in Resources */,
 				42B57DFA18AE794C00C44991 /* logo.png in Resources */,
 				4286B4E018BFA241000DF272 /* AppIcon29x29@2x.png in Resources */,
+				42D802F718F188600084B28D /* bg-plain.png in Resources */,
 				42019B0618DA5758006D4E50 /* page3.png in Resources */,
 				42EF8C3F18F0C25A00ECE3F8 /* bg2@2x.png in Resources */,
 				4286B4E418BFA241000DF272 /* AppIcon50x50@2x.png in Resources */,
 				42769EB618AD176000929870 /* InfoPlist.strings in Resources */,
 				42B3DD1E18B2C2CD0091FCE5 /* profile@2x.png in Resources */,
 				42019B0518DA5758006D4E50 /* page2.png in Resources */,
+				42D802FF18F1E3C30084B28D /* id.png in Resources */,
 				42019B0718DA5758006D4E50 /* page4.png in Resources */,
 				42522B4318C7D8E700C94B58 /* uknown.png in Resources */,
 				4249DD8918BEA5A40083C9A5 /* profileIcon.png in Resources */,
@@ -761,6 +784,7 @@
 					"$(inherited)",
 					"/Volumes/Data/[Projects]/[INRIA]/Shuttler2/code/shuttler",
 					"/Volumes/Data/[Projects]/[INRIA]/Shuttler2/code/shuttler/shuttler/Google",
+					/Users/mathioud/Documents/FacebookSDK,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "shuttler/shuttler-Prefix.pch";
@@ -781,6 +805,7 @@
 					"$(inherited)",
 					"/Volumes/Data/[Projects]/[INRIA]/Shuttler2/code/shuttler",
 					"/Volumes/Data/[Projects]/[INRIA]/Shuttler2/code/shuttler/shuttler/Google",
+					/Users/mathioud/Documents/FacebookSDK,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "shuttler/shuttler-Prefix.pch";

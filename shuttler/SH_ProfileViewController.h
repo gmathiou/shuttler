@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "SH_User.h"
 #import "SH_HomeViewController.h"
+#import <FacebookSDK/FacebookSDK.h>
 
-@interface SH_ProfileViewController : UIViewController
+@interface SH_ProfileViewController : UIViewController <FBLoginViewDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *signOutButton;
 - (IBAction)signOutButtonPressed:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *profileName;
@@ -21,4 +22,5 @@
 @property (weak, nonatomic) IBOutlet UILabel *kilometersLabel;
 @property (weak, nonatomic) SH_User *user;
 @property (weak, nonatomic) SH_HomeViewController *homeRef;
+@property (weak, nonatomic) IBOutlet FBLoginView *facebookLoginView;
 @end

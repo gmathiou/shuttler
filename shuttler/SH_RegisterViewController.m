@@ -34,7 +34,7 @@
 {
     [super viewDidLoad];
     [self checkNetworkConnection];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     _dataHandler = [SH_DataHandler sharedInstance];
 }
 
@@ -96,6 +96,7 @@
 {
     [super viewWillAppear:animated];
     [self registerForKeyboardNotifications];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -127,11 +128,6 @@
     [self.formScrollView setContentOffset:CGPointZero animated:NO];
 }
 
--(BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
-
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSInteger nextTag = textField.tag + 1;
@@ -153,18 +149,6 @@
 - (IBAction)presentHome:(id)sender
 {
     [self performSegueWithIdentifier:@"registrationToHomeSegue" sender:sender];
-}
-
--(NSString*) sha1:(NSString*)input
-{
-    const char *cstr = [input cStringUsingEncoding:NSUTF8StringEncoding];
-    NSData *data = [NSData dataWithBytes:cstr length:input.length];
-    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
-    CC_SHA1(data.bytes, data.length, digest);
-    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
-    for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-        [output appendFormat:@"%02x", digest[i]];
-    return output;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -190,8 +174,9 @@
     if(code == 200){
         [_errorMsgImage setHidden:YES];
         [_errorMsgLabel setHidden:YES];
-        _dataHandler.user.signedIn = YES;
-        _dataHandler.user.username = _usernameTextField.text;
+        [_dataHandler.user setSignedIn:YES];
+        [_dataHandler.user setIdentification:_usernameTextField.text];
+        [_dataHandler.user setPassword:_inputPasswordSHA];
         
         // Store the data
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -228,8 +213,17 @@
         [_errorMsgLabel setHidden:NO];
         return;
     }
+    
+    //Username cannot contain the @ symbol
+    if([_usernameTextField.text rangeOfString:@""].location != NSNotFound){
+        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"at_forbiden", nil)]];
+        [_errorMsgImage setHidden:NO];
+        [_errorMsgLabel setHidden:NO];
+        return;
+    }
+    
     NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/registration/",Server_URL];
-    NSString *sha1Pass = [self sha1:_passwordTextField.text];
+    NSString *sha1Pass = [_dataHandler sha1:_passwordTextField.text];
     
     //Construct the JSON here. Like string for now
     NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"password\":\"%@\"}",

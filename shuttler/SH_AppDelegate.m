@@ -7,6 +7,7 @@
 //
 
 #import "SH_AppDelegate.h"
+#import <FacebookSDK/FacebookSDK.h>
 
 #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
@@ -23,9 +24,22 @@ void onUncaughtException(NSException *exception)
     pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];
     pageControl.backgroundColor = [UIColor blackColor];
-    
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     NSSetUncaughtExceptionHandler(&onUncaughtException);
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    
+    // Call FBAppCall's handleOpenURL:sourceApplication to handle Facebook app responses
+    BOOL wasHandled = [FBAppCall handleOpenURL:url sourceApplication:sourceApplication];
+    
+    // You can add your app-specific url handling code here if needed
+    
+    return wasHandled;
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application

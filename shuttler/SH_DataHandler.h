@@ -21,4 +21,6 @@
 @property (strong, nonatomic) NSMutableArray *annotationsToRemove;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSTimer *busesRequestsTimer;
+
+-(NSString*) sha1:(NSString*)input;
 @end

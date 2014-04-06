@@ -9,7 +9,6 @@
 #import "SH_LoginViewController.h"
 #import "SH_HomeViewController.h"
 #import "Reachability.h"
-#import <CommonCrypto/CommonDigest.h>
 #import "SH_DataHandler.h"
 
 @interface SH_LoginViewController ()
@@ -34,7 +33,7 @@
 {
     [super viewDidLoad];
     [self checkNetworkConnection];
-    [self.navigationController setNavigationBarHidden:YES animated:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
     _dataHandler = [SH_DataHandler sharedInstance];
 }
 
@@ -53,34 +52,6 @@
     }
 }
 
-- (void)registerForKeyboardNotifications
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWasShown:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillBeHidden:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(dismissKeyboard)];
-    [self.view addGestureRecognizer:tap];
-}
-
-- (void)deregisterFromKeyboardNotifications
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardDidHideNotification
-                                                  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
-}
-
-
 -(void)dismissKeyboard {
     [_usernameTextField resignFirstResponder];
     [_passwordTextField resignFirstResponder];
@@ -89,42 +60,17 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self registerForKeyboardNotifications];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(dismissKeyboard)];
+    [self.view addGestureRecognizer:tap];
     [self.formScrollView setContentOffset:CGPointZero animated:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [self deregisterFromKeyboardNotifications];
     [super viewWillDisappear:animated];
-}
-
-- (void)keyboardWasShown:(NSNotification *)notification
-{
-    NSDictionary* info = [notification userInfo];
-    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    CGPoint buttonOrigin = self.registerButton.frame.origin;
-    CGFloat buttonHeight = self.registerButton.frame.size.height;
-    CGRect visibleRect = self.view.frame;
-    visibleRect.size.height -= keyboardSize.height;
-    if (!CGRectContainsPoint(visibleRect, buttonOrigin)){
-        CGPoint scrollPoint = CGPointMake(0.0, buttonOrigin.y - visibleRect.size.height + buttonHeight + 10);
-        [self.formScrollView setContentOffset:scrollPoint animated:YES];
-    }
-    
-    //If the error msgs are visible, hide them
-    [_errorMsgImage setHidden:YES];
-    [_errorMsgLabel setHidden:YES];
-}
-
-- (void)keyboardWillBeHidden:(NSNotification *)notification
-{
-    [self.formScrollView setContentOffset:CGPointZero animated:NO];
-}
-
--(BOOL)prefersStatusBarHidden
-{
-    return YES;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -167,18 +113,6 @@
     [self performSegueWithIdentifier:@"loginToTutorialSegue" sender:sender];
 }
 
--(NSString*) sha1:(NSString*)input
-{
-    const char *cstr = [input cStringUsingEncoding:NSUTF8StringEncoding];
-    NSData *data = [NSData dataWithBytes:cstr length:input.length];
-    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
-    CC_SHA1(data.bytes, data.length, digest);
-    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
-    for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-        [output appendFormat:@"%02x", digest[i]];
-    return output;
-}
-
 - (IBAction)signInButtonPressed:(id)sender
 {
     [self sendAuthenticationRequest];
@@ -193,7 +127,7 @@
         return;
     }
     NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/authenticate/",Server_URL];
-    NSString *sha1Pass = [self sha1:_passwordTextField.text];
+    NSString *sha1Pass = [_dataHandler sha1:_passwordTextField.text];
     
     //Construct the JSON here. Like string for now
     NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"password\":\"%@\"}",
@@ -238,8 +172,9 @@
     if(code == 200){
         [_errorMsgImage setHidden:YES];
         [_errorMsgLabel setHidden:YES];
-        _dataHandler.user.signedIn = YES;
-        _dataHandler.user.username = _usernameTextField.text;
+        [_dataHandler.user setSignedIn:YES];
+        [_dataHandler.user setIdentification:_usernameTextField.text];
+        [_dataHandler.user setPassword:_inputPasswordSHA];
         
         // Store the data
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
