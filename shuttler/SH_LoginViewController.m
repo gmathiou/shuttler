@@ -10,6 +10,7 @@
 #import "SH_HomeViewController.h"
 #import "Reachability.h"
 #import "SH_DataHandler.h"
+#import "SH_Constants.h"
 
 @interface SH_LoginViewController ()
 @property NSMutableData *_responseData;
@@ -174,6 +175,7 @@
         [_errorMsgLabel setHidden:YES];
         [_dataHandler.user setSignedIn:YES];
         [_dataHandler.user setIdentification:_usernameTextField.text];
+        [_dataHandler.user setName:_usernameTextField.text];
         [_dataHandler.user setPassword:_inputPasswordSHA];
         
         // Store the data

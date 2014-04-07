@@ -247,12 +247,12 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="_hopOnButton" destination="BML-gd-rmZ" id="QmU-tO-Qan"/>
                         <outlet property="busExptectedContainer" destination="cSQ-M1-mfa" id="KVI-er-LCt"/>
                         <outlet property="busExptectedLabel" destination="fv7-5M-gC5" id="ZnE-gO-Lmu"/>
                         <outlet property="busIcon" destination="E9x-Ry-hJf" id="7cm-Fr-1TR"/>
                         <outlet property="circularMap" destination="ZNm-o9-khv" id="0fR-La-nHL"/>
                         <outlet property="expectedArrivalTimeLabel" destination="6gJ-lF-jQ8" id="XvS-NR-xda"/>
+                        <outlet property="hopOnButton" destination="BML-gd-rmZ" id="jEc-50-ShQ"/>
                         <outlet property="nearestStopDescriptionlabel" destination="oIr-DD-Rf9" id="VrA-IK-BRo"/>
                         <outlet property="nearestStopLabel" destination="ugl-mc-5VZ" id="NCf-xc-ym0"/>
                         <segue destination="kHP-gu-60y" kind="unwind" identifier="goToHomeSegue" unwindAction="goToHome:" id="dPc-XQ-g2z"/>

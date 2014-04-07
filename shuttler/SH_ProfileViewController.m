@@ -13,6 +13,7 @@
 
 @interface SH_ProfileViewController ()
 @property SH_DataHandler *dataHandler;
+@property NSMutableData *responseData;
 @end
 
 @implementation SH_ProfileViewController
@@ -42,6 +43,7 @@
     
     _dataHandler = [SH_DataHandler sharedInstance];
     _profileName.text = _dataHandler.user.name;
+    
     [self getDataFromShuttlerServer];
 }
 
@@ -61,12 +63,28 @@
     if(_dataHandler.user.facebookLogedIn == NO)
         return;
     
-    _dataHandler.user.signedIn = NO;
-    _dataHandler.user.facebookLogedIn = NO;
+    if (FBSession.activeSession.state == FBSessionStateOpen || FBSession.activeSession.state == FBSessionStateOpenTokenExtended) {
+        [FBSession.activeSession closeAndClearTokenInformation];
+    }
+    [self signOut];
+}
+
+-(void)signOut
+{
+    [_dataHandler.busesRequestsTimer invalidate];
+    
+    [_dataHandler.user setFacebookLogedIn:NO];
+    [_dataHandler.user setSignedIn:NO];
+    [_dataHandler.user setIdentification:nil];
+    [_dataHandler.user setName:nil];
+    [_dataHandler.user setUsername:nil];
+    [_dataHandler.user setPassword:nil];
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:@"username"];
     [defaults removeObjectForKey:@"password_sha"];
     [defaults synchronize];
+    
     [self presentSplash:self];
 }
 
@@ -92,7 +110,7 @@
 -(void)getDataFromShuttlerServer
 {
     // Create the request.
-    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/profile/%@",Server_URL, _user.identification];
+    NSString *URL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/profile/%@",Server_URL, _dataHandler.user.identification];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:URL]];
     
     // Create url connection and fire request
@@ -106,13 +124,7 @@
 }
 
 - (IBAction)signOutButtonPressed:(id)sender {
-    [_dataHandler.busesRequestsTimer invalidate];
-    _dataHandler.user = [[SH_User alloc] init];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:@"username"];
-    [defaults removeObjectForKey:@"password_sha"];
-    [defaults synchronize];
-    [self presentSplash:self];
+    [self signOut];
 }
 
 - (IBAction)presentSplash:(id)sender
@@ -152,12 +164,13 @@
 #pragma mark NSURLConnection Delegate Methods
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    self._responseData = [[NSMutableData alloc] init];
+    _responseData = [[NSMutableData alloc] init];
+    [self initProfileImage];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     // Append the new data to the instance variable you declared
-    [self._responseData appendData:data];
+    [_responseData appendData:data];
     //NSLog(@"Received Data");
 }
 
@@ -168,7 +181,7 @@
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection {
     NSError *myError = nil;
-    NSDictionary *res = [NSJSONSerialization JSONObjectWithData:self._responseData options:NSJSONReadingMutableLeaves error:&myError];
+    NSDictionary *res = [NSJSONSerialization JSONObjectWithData:_responseData options:NSJSONReadingMutableLeaves error:&myError];
     NSString *rank = [res objectForKey:@"rank"];
     if(rank == nil)
         rank = @"0";
@@ -182,15 +195,10 @@
     [_viewsLabel setText: [NSString stringWithFormat:@"%@",views]];
     [_rankLabel setText:[NSString stringWithFormat:@"#%@",rank]];
     [_kilometersLabel setText:[NSString stringWithFormat:@"%@",km]];
-    
-    //Everytning is loaded, now you can download image
-    [self initProfileImage];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    // The request has failed for some reason!
-    // Check the error var
-    NSLog(@"Connection Error");
+    [self initProfileImage];
 }
 
 @end

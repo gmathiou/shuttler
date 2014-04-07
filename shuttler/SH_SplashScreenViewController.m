@@ -59,6 +59,9 @@
     if(username && password_sha){
         _username = username;
         _passwordSHA = password_sha;
+    } else {
+        [_spinner stopAnimating];
+        return;
     }
 
     
@@ -99,6 +102,7 @@
     if(code == 200){
         _dataHandler.user.signedIn = YES;
         [_dataHandler.user setIdentification:_username];
+        [_dataHandler.user setName:_username];
         [_dataHandler.user setPassword:_passwordSHA];
         [self presentHome:self];
     }

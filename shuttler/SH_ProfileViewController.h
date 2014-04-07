@@ -17,10 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *profileName;
 @property (weak, nonatomic) IBOutlet UIImageView *userProfileImage;
 @property (weak, nonatomic) IBOutlet UILabel *rankLabel;
-@property NSMutableData *_responseData;
 @property (weak, nonatomic) IBOutlet UILabel *viewsLabel;
 @property (weak, nonatomic) IBOutlet UILabel *kilometersLabel;
-@property (weak, nonatomic) SH_User *user;
-@property (weak, nonatomic) SH_HomeViewController *homeRef;
 @property (weak, nonatomic) IBOutlet FBLoginView *facebookLoginView;
 @end
