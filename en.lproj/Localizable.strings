@@ -28,8 +28,9 @@
 "auth_error"            = "Authentication error";
 "auth_error_desc"       = "Something went bad with authentication";
 "now"                   = "now";
-"fillin_all_fields"     = "You must fill-in all fields";
+"fillin_all_fields"     = "You must fill-in all the fields";
 "connection_error"      = "Connection Error";
 "account_not_exists"    = "Account does not exist";
 "account_exists"        = "Username already taken";
 "at_forbiden"           = "The @ symbol is not valid";
+"strong_password"       = "Password must be at least 4 characters";

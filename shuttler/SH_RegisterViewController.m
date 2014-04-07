@@ -140,7 +140,7 @@
     } else {
         // Not found, so remove keyboard.
         [textField resignFirstResponder];
-        if(_usernameTextField.text.length > 0 && _passwordTextField.text.length >0){
+        if([self fieldsValidation]){
             [self sendRegistrationRequest];
         }
     }
@@ -158,11 +158,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    if(_usernameTextField.text.length == 0 || _passwordTextField.text.length == 0){
-        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"fillin_all_fields", nil)]];
-    } else {
-        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"connection_error", nil)]];
-    }
+    [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"connection_error", nil)]];
     [_registerLoadingIndicator setHidden:YES];
     [_errorMsgImage setHidden:NO];
     [_errorMsgLabel setHidden:NO];
@@ -204,26 +200,35 @@
 
 
 - (IBAction)registerButtonPressed:(id)sender {
-    [self sendRegistrationRequest];
+    if([self fieldsValidation])
+        [self sendRegistrationRequest];
+}
+
+-(BOOL)fieldsValidation
+{
+    if(_usernameTextField.text.length == 0 || _passwordTextField.text.length == 0){
+        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"fillin_all_fields", nil)]];
+        [_registerLoadingIndicator setHidden:YES];
+        [_errorMsgImage setHidden:NO];
+        [_errorMsgLabel setHidden:NO];
+        return false;
+    } else if(_passwordTextField.text.length < 4){
+        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"strong_password", nil)]];
+        [_registerLoadingIndicator setHidden:YES];
+        [_errorMsgImage setHidden:NO];
+        [_errorMsgLabel setHidden:NO];
+        return false;
+    } else if([_usernameTextField.text rangeOfString:@""].location != NSNotFound){
+        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"at_forbiden", nil)]];
+        [_errorMsgImage setHidden:NO];
+        [_errorMsgLabel setHidden:NO];
+        return false;
+    }
+    return true;
 }
 
 -(void)sendRegistrationRequest
 {
-    if(_usernameTextField.text.length == 0 || _passwordTextField.text.length == 0){
-        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"fillin_all_fields", nil)]];
-        [_errorMsgImage setHidden:NO];
-        [_errorMsgLabel setHidden:NO];
-        return;
-    }
-    
-    //Username cannot contain the @ symbol
-    if([_usernameTextField.text rangeOfString:@""].location != NSNotFound){
-        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"at_forbiden", nil)]];
-        [_errorMsgImage setHidden:NO];
-        [_errorMsgLabel setHidden:NO];
-        return;
-    }
-    
     NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/registration/",Server_URL];
     NSString *sha1Pass = [_dataHandler sha1:_passwordTextField.text];
     

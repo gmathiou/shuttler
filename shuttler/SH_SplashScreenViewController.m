@@ -168,7 +168,6 @@
     [_spinner stopAnimating];
     [_authenticateConnection cancel];
     [self sendRegistrationRequest];
-    [self presentHome:self];
 }
 
 - (void)loginView:(FBLoginView *)loginView handleError:(NSError *)error {
@@ -215,6 +214,9 @@
 
 -(void)sendRegistrationRequest
 {
+    [_spinner startAnimating];
+    [_spinner setHidden:NO];
+    
     NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/registration/",Server_URL];
     //Construct the JSON here. Like string for now
     NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"password\":\"%@\"}",
@@ -229,6 +231,12 @@
     [request setHTTPBody:postData];
     [request setTimeoutInterval:requestsTimeOut];
     [NSURLConnection connectionWithRequest:request delegate:self];
+
+    [_spinner stopAnimating];
+    
+    if([self isViewLoaded] == YES){
+        [self presentHome:self];
+    }
 }
 
 - (IBAction)loginButtonPressed:(id)sender {

@@ -86,7 +86,7 @@
         // Not found, so remove keyboard.
         [textField resignFirstResponder];
         
-        if(_usernameTextField.text.length > 0 && _passwordTextField.text.length >0){
+        if([self fieldsValidation]){
             [self sendAuthenticationRequest];
         }
     }
@@ -116,17 +116,12 @@
 
 - (IBAction)signInButtonPressed:(id)sender
 {
-    [self sendAuthenticationRequest];
+    if([self fieldsValidation])
+        [self sendAuthenticationRequest];
 }
 
 -(void) sendAuthenticationRequest
 {
-    if(_usernameTextField.text.length == 0 || _passwordTextField.text.length == 0){
-        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"fillin_all_fields", nil)]];
-        [_errorMsgImage setHidden:NO];
-        [_errorMsgLabel setHidden:NO];
-        return;
-    }
     NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/authenticate/",Server_URL];
     NSString *sha1Pass = [_dataHandler sha1:_passwordTextField.text];
     
@@ -148,6 +143,18 @@
     [NSURLConnection connectionWithRequest:request delegate:self];
     
     [_signInLoadingIndicator setHidden:NO];
+}
+
+-(BOOL)fieldsValidation
+{
+    if(_usernameTextField.text.length == 0 || _passwordTextField.text.length == 0){
+        [_errorMsgLabel setText:[NSString stringWithFormat:NSLocalizedString(@"fillin_all_fields", nil)]];
+        [_signInLoadingIndicator setHidden:YES];
+        [_errorMsgImage setHidden:NO];
+        [_errorMsgLabel setHidden:NO];
+        return false;
+    }
+    return true;
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
