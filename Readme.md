@@ -11,4 +11,4 @@ The server URL can be changed at file "shuttler/SH_Constants.h"
 
 Screenshots
 -----------
-![Shuttler img](https://m1.behance.net/rendition/modules/102680989/disp/6d9a1a570aa69040d2189b184b09a13c.png)
+![Shuttler img](http://gmathiou.com/img/shuttler.png)
