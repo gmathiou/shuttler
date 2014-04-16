@@ -45,6 +45,10 @@
     _profileName.text = _dataHandler.user.name;
     
     [self getDataFromShuttlerServer];
+    
+    if(_dataHandler.user.image != nil){
+        [self initProfileImage];
+    }
 }
 
 - (void) viewWillAppear:(BOOL)animated

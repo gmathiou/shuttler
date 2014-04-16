@@ -24,13 +24,14 @@
 
 - (id)init {
     if (self = [super init]) {
-        _user                   = [[SH_User alloc] init];//This is the current user
-        _buses                  = [NSMutableArray array]; //All available buses
-        _busLines               = [NSMutableDictionary dictionary]; //All available bus lines
-        _stops                  = [NSMutableDictionary dictionary]; //All available stops
-        _annotationsToRemove    = [NSMutableArray array];
-        _locationManager        = [[CLLocationManager alloc] init];
-        _user.signedIn          = NO;
+        _user                       = [[SH_User alloc] init];//This is the current user
+        _buses                      = [NSMutableArray array]; //All available buses
+        _busLines                   = [NSMutableDictionary dictionary]; //All available bus lines
+        _stops                      = [NSMutableDictionary dictionary]; //All available stops
+        _busAnnotationsToRemove     = [NSMutableArray array];
+        _stopAnnotationsToRemove    = [NSMutableArray array];
+        _locationManager            = [[CLLocationManager alloc] init];
+        _user.signedIn              = NO;
     }
     return self;
 }

@@ -51,6 +51,8 @@
 
 -(void) authenticateUser
 {
+    [_spinner setHidden:NO];
+    
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     NSString *username = [defaults objectForKey:@"username"];
@@ -60,7 +62,7 @@
         _username = username;
         _passwordSHA = password_sha;
     } else {
-        [_spinner stopAnimating];
+        [_spinner setHidden:YES];
         return;
     }
 
@@ -93,7 +95,6 @@
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
     if(_dataHandler.user.facebookLogedIn == YES){
-        [_spinner stopAnimating];
         return;
     }
     self._responseData = [[NSMutableData alloc] init];
@@ -106,7 +107,7 @@
         [_dataHandler.user setPassword:_passwordSHA];
         [self presentHome:self];
     }
-    [_spinner stopAnimating];
+    [_spinner setHidden:YES];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
@@ -150,6 +151,8 @@
     if(user.username == nil || _dataHandler.user.facebookLogedIn == YES)
         return;
     
+    [_spinner setHidden:NO];
+    
     NSString *email = [user objectForKey:@"email"];
     NSString *password = [_dataHandler sha1:email];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -165,7 +168,6 @@
     [_dataHandler.user setPassword:password];
     
     [defaults synchronize];
-    [_spinner stopAnimating];
     [_authenticateConnection cancel];
     [self sendRegistrationRequest];
 }
@@ -214,9 +216,6 @@
 
 -(void)sendRegistrationRequest
 {
-    [_spinner startAnimating];
-    [_spinner setHidden:NO];
-    
     NSString *requestURL = [NSString stringWithFormat:@"%@Shuttler-server/webapi/registration/",Server_URL];
     //Construct the JSON here. Like string for now
     NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"password\":\"%@\"}",
@@ -232,9 +231,8 @@
     [request setTimeoutInterval:requestsTimeOut];
     [NSURLConnection connectionWithRequest:request delegate:self];
 
-    [_spinner stopAnimating];
-    
     if([self isViewLoaded] == YES){
+        [_spinner setHidden:YES];
         [self presentHome:self];
     }
 }

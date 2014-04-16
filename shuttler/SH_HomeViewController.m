@@ -18,7 +18,6 @@
 #import "SH_Constants.h"
 
 @interface SH_HomeViewController ()
-@property NSMutableArray * annotationsToRemove; //Used for clearing the map markers
 @property NSTimer *hopOffTimer;
 @property NSMutableData *responseData;
 @property NSURLConnection *requestBusForLineConnection;
@@ -300,14 +299,14 @@
 //        return;
 //    }
 
-    [_circularMap removeAnnotations:_dataHandler.annotationsToRemove];//Remove old markers
-    [_dataHandler.annotationsToRemove removeAllObjects];
-
     if ([res objectForKey:@"buses"]!=nil) {
         
         if(_dataHandler.user.onBoard == YES){
             return;
         }
+        
+        [_circularMap removeAnnotations:_dataHandler.busAnnotationsToRemove];//Remove old markers
+        [_dataHandler.busAnnotationsToRemove removeAllObjects];
         
         [_dataHandler.buses removeAllObjects]; //Remove old entries
         
@@ -333,7 +332,7 @@
             annotationPoint.coordinate          = annotationCoord;
             annotationPoint.title               = ((SH_BusLine *) [_dataHandler.busLines objectForKey:lineId]).name;
             [_circularMap addAnnotation:annotationPoint];
-            [_dataHandler.annotationsToRemove addObject:annotationPoint];
+            [_dataHandler.busAnnotationsToRemove addObject:annotationPoint];
         }
         [self findNearestBus];
     }
@@ -352,6 +351,9 @@
             [self requestStops];
             return;
         }
+        
+        [_circularMap removeAnnotations:_dataHandler.stopAnnotationsToRemove];//Remove old markers
+        [_dataHandler.stopAnnotationsToRemove removeAllObjects];
             
         [_dataHandler.stops removeAllObjects]; //Remove old entries
         
@@ -380,7 +382,7 @@
             annotationPoint.title               = newStop.stopName;
             annotationPoint.subtitle            = [NSString stringWithFormat:NSLocalizedString(@"stop_subtitle", nil)];
             
-            [_dataHandler.annotationsToRemove addObject:annotationPoint];
+            [_dataHandler.stopAnnotationsToRemove addObject:annotationPoint];
             [_circularMap addAnnotation:annotationPoint];
             
             if([newStop.stopName isEqual: @"Inria"]){
@@ -429,8 +431,8 @@
     
     //Stop the bus request timer. An on-board user should not see buses. And remove all buses from the map
     [_dataHandler.busesRequestsTimer invalidate];
-    [_circularMap removeAnnotations:_dataHandler.annotationsToRemove];
-    [_dataHandler.annotationsToRemove removeAllObjects];
+    [_circularMap removeAnnotations:_dataHandler.busAnnotationsToRemove];
+    [_dataHandler.busAnnotationsToRemove removeAllObjects];
     
     //Construct JSON as string and send the request to server
     NSString *post = [NSString stringWithFormat: @"{\"email\":\"%@\",\"password\":\"%@\",\"latitude\":\"%f\",\"longitude\":\"%f\",\"lineid\":\"%d\"}",

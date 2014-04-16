@@ -18,7 +18,8 @@
 @property (strong, nonatomic) NSMutableArray *buses;
 @property (strong, nonatomic) NSMutableDictionary *busLines;
 @property (strong, nonatomic) SH_Stop *inriaStop;
-@property (strong, nonatomic) NSMutableArray *annotationsToRemove;
+@property (strong, nonatomic) NSMutableArray *busAnnotationsToRemove;
+@property (strong, nonatomic) NSMutableArray *stopAnnotationsToRemove;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSTimer *busesRequestsTimer;
 
